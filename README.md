@@ -9,6 +9,6 @@
 
 ### Python modules
 * pysound
-* graphics
+* pygame
 
 `pip3 install --user pysound graphics`
