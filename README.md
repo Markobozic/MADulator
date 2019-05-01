@@ -5,10 +5,6 @@
 ### Linux packages
 * portaudio19-dev
 
-`sudo apt-get install portaudio19-dev`
-
 ### Python modules
 * pysound
 * pygame
-
-`pip3 install --user pysound graphics`
