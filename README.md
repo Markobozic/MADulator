@@ -6,5 +6,5 @@
 * portaudio19-dev
 
 ### Python modules
-* pysound
+* pyaudio
 * pygame
