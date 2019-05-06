@@ -13,7 +13,7 @@
 
 To make changes to the repository please checkout the master branch:
 
-```git checkout origin master```
+```git checkout master```
 
 Pull in any changes to master and resolve conflicts if necessary, use the sequence of commands below:
 
