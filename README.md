@@ -26,4 +26,8 @@ To branch off master, use one of the following commands:
 
 ## Code Review
 
-Look to get atleast one approval on pull requests before merging changes into master. It's also **highly** recommended that you use the git feature > squash and merge
+Look to get atleast one approval on pull requests before merging changes into master. 
+
+It's also **highly** recommended that you use the following git feature to merge your code.
+
+> squash and merge
