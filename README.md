@@ -11,19 +11,19 @@
 
 ## Code Additions
 
-### To make changes to the repository please checkout the master branch:
+To make changes to the repository please checkout the master branch:
 
 ```git checkout origin master```
 
-### Pull in any changes to master and resolve conflicts if necessary, use the sequence of commands below:
+Pull in any changes to master and resolve conflicts if necessary, use the sequence of commands below:
 
-1. ```git fetch```
-2. ```git pull```
+1.```git fetch```
+2.```git pull```
 
-### To branch off master, use one of the following commands:
+To branch off master, use one of the following commands:
 
-1. ```git checkout -b feature/{feature-to-add}```
-2. ```git checkout -b bugfix/{bug-to-fix}```
+1.```git checkout -b feature/{feature-to-add}```
+2.```git checkout -b bugfix/{bug-to-fix}```
 
 ## Code Review
 
