@@ -21,8 +21,8 @@ Pull in any changes to master and resolve conflicts if necessary:
 
 To branch off master, use one of the following commands:
 
-```1. git checkout -b feature/{feature-to-add}```
-```2. git checkout -b bugfix/{bug-to-fix}```
+1. ```git checkout -b feature/{feature-to-add}```
+2. ```git checkout -b bugfix/{bug-to-fix}```
 
 ## Code Review
 
