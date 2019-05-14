@@ -67,17 +67,20 @@ class Mult(Expression):
 
 
 class Div(Expression):
+    '''This does floor division, but in the case it detects that the denominator
+    will be zero, it reuses the denominator from the previous eval call.'''
 
-    previous = 1
+    previous_right_result = 1
 
     def __init__(self):
         pass
 
     def eval(self, t: int) -> int:
-        if self.right == 0:
-            return previous
-        previous = self.left.eval(t)/self.right.eval(t)
-        return int(previous)
+        right_result = self.right.eval(t)
+        if right_result == 0:
+            return self.left.eval(t) // previous_right_result
+        previous_right_result = right_result
+        return self.left.eval(t) // right_result
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' / ' + str(self.right) + ')'
