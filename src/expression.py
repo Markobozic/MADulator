@@ -29,6 +29,9 @@ class Value(Expression):
     def set_number(self, num: int) -> None:
         self.number = num
 
+    def __str__(self) -> str:
+        return number
+
 class Add(Expression):
 
     def __init__(self):
@@ -37,6 +40,8 @@ class Add(Expression):
     def eval(self, t: int) -> int:
         return self.left.eval(t) + self.right.eval(t)
 
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' + ' + str(self.right) + ')'
 
 class Sub(Expression):
 
@@ -46,6 +51,8 @@ class Sub(Expression):
     def eval(self, t: int) -> int:
         return self.left.eval(t) - self.right.eval(t)
 
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' - ' + str(self.right) + ')'
 
 class Mult(Expression):
 
@@ -54,6 +61,9 @@ class Mult(Expression):
 
     def eval(self, t: int) -> int:
         return self.left.eval(t) * self.right.eval(t)
+
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' * ' + str(self.right) + ')'
 
 
 class Div(Expression):
@@ -69,6 +79,8 @@ class Div(Expression):
         previous = self.left.eval(t)/self.right.eval(t)
         return int(previous)
 
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' / ' + str(self.right) + ')'
 
 class Var(Expression):
 
@@ -78,6 +90,8 @@ class Var(Expression):
     def eval(self, t: int) -> int:
         return t
 
+    def __str__(self) -> str:
+        return 't'
 
 class ShiftLeft(Expression):
 
@@ -87,6 +101,9 @@ class ShiftLeft(Expression):
     def eval(self, t: int) -> int:
         return self.left.eval(t) << self.right.eval(t)
 
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' << ' + str(self.right) + ')'
+
 class ShiftRight(Expression):
 
     def __init__(self):
@@ -94,6 +111,9 @@ class ShiftRight(Expression):
 
     def eval(self, t: int) -> int:
         return self.left.eval(t) >> self.right.eval(t)
+
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' >> ' + str(self.right) + ')'
 
 class Mod(Expression):
 
@@ -103,6 +123,9 @@ class Mod(Expression):
     def eval(self, t: int) -> int:
         return self.left.eval(t) % self.right.eval(t)
 
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' % ' + str(self.right) + ')'
+
 class Pow(Expression):
 
     def __init__(self):
@@ -110,3 +133,6 @@ class Pow(Expression):
 
     def eval(self, t: int) -> int:
         return self.left.eval(t)**self.right.eval(t)
+
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' ^ ' + str(self.right) + ')'
