@@ -99,7 +99,7 @@ class ShiftLeft(Expression):
         pass
 
     def eval(self, t: int) -> int:
-        return self.left.eval(t) << self.right.eval(t)
+        return self.left.eval(t) << (self.right.eval(t) % 32)
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' << ' + str(self.right) + ')'
@@ -110,7 +110,7 @@ class ShiftRight(Expression):
         pass
 
     def eval(self, t: int) -> int:
-        return self.left.eval(t) >> self.right.eval(t)
+        return self.left.eval(t) >> (self.right.eval(t) % 32)
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' >> ' + str(self.right) + ')'
@@ -126,13 +126,35 @@ class Mod(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' % ' + str(self.right) + ')'
 
-class Pow(Expression):
+class BitAnd(Expression):
 
     def __init__(self):
         pass
 
     def eval(self, t: int) -> int:
-        return self.left.eval(t)**self.right.eval(t)
+        return self.left.eval(t) & self.right.eval(t)
+
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' & ' + str(self.right) + ')'
+
+class BitOr(Expression):
+
+    def __init__(self):
+        pass
+
+    def eval(self, t: int) -> int:
+        return self.left.eval(t) | self.right.eval(t)
+
+    def __str__(self) -> str:
+        return '(' + str(self.left) + ' | ' + str(self.right) + ')'
+
+class BitXor(Expression):
+
+    def __init__(self):
+        pass
+
+    def eval(self, t: int) -> int:
+        return self.left.eval(t) ^ self.right.eval(t)
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' ^ ' + str(self.right) + ')'
