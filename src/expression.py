@@ -30,7 +30,7 @@ class Value(Expression):
         self.number = num
 
     def __str__(self) -> str:
-        return number
+        return str(self.number)
 
 class Add(Expression):
 
@@ -78,8 +78,8 @@ class Div(Expression):
     def eval(self, t: int) -> int:
         right_result = self.right.eval(t)
         if right_result == 0:
-            return self.left.eval(t) // previous_right_result
-        previous_right_result = right_result
+            return self.left.eval(t) // self.previous_right_result
+        self.previous_right_result = right_result
         return self.left.eval(t) // right_result
 
     def __str__(self) -> str:
@@ -120,11 +120,17 @@ class ShiftRight(Expression):
 
 class Mod(Expression):
 
+    previous_right_result = 1
+
     def __init__(self):
         pass
 
     def eval(self, t: int) -> int:
-        return self.left.eval(t) % self.right.eval(t)
+        right_result = self.right.eval(t)
+        if right_result == 0:
+            return self.left.eval(t) % self.previous_right_result
+        self.previous_right_result = right_result
+        return self.left.eval(t) % right_result
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' % ' + str(self.right) + ')'
