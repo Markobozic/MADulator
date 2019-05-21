@@ -8,7 +8,7 @@ class Editor():
     def __init__(self):
         pass
 
-    def new_key(self, key: int, function: Expression) -> Expression:
+    def new_key(self, key: QKeyEvent, function: Expression) -> Expression:
         root = function
         stack = function
 
@@ -62,7 +62,7 @@ class Editor():
             root = stack.pop()
         return root
 
-    def replace(self, new_op_type: str, key: int) -> Expression:
+    def replace(self, new_op_type: str, key: QKeyEvent) -> Expression:
 
         # 1. Val/Var -> Val/Var/Math
         if instance(root, Value) or instance(root, Var):
@@ -83,7 +83,7 @@ class Editor():
 
         return root
 
-    def v_to_math(self, key: int) -> Expression:
+    def v_to_math(self, key: QKeyEvent) -> Expression:
 
         if key == Qt.Key_Plus:
             root = Add()
@@ -112,7 +112,7 @@ class Editor():
 
         return root
 
-    def math_to_math(self, key: int) -> Expression:
+    def math_to_math(self, key: QKeyEvent) -> Expression:
         left = root.left
         right = root.right
         root = v_to_math(key)
@@ -121,7 +121,7 @@ class Editor():
 
         return root
 
-    def math_to_v(self, key: int) -> Expression:
+    def math_to_v(self, key: QKeyEvent) -> Expression:
         root.left = None
         root.right = None
         root = v_to_math(key)
