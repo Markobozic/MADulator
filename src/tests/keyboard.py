@@ -1,9 +1,6 @@
-import sys
-sys.path.append("..")
-
-
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
+
 
 class KeyPressWindow(pg.GraphicsWindow):
     sigKeyPress = QtCore.pyqtSignal(object)
@@ -16,15 +13,15 @@ class KeyPressWindow(pg.GraphicsWindow):
         self.sigKeyPress.emit(ev)
 
 
-def keyPressed(evt):
+def key_pressed():
     print("Key pressed")
 
 
 app = pg.mkQApp()
 win = KeyPressWindow()
-win.sigKeyPress.connect(keyPressed)
+win.sigKeyPress.connect(key_pressed)
 pl = win.addPlot()
-pl.plot([x*x for x in range(-10,11)])
+pl.plot([x*x for x in range(-10, 11)])
 
 
 app.exec_()

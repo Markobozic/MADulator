@@ -1,27 +1,19 @@
-from expression import *
+from src.expression import *
 import random
 
 default_number_of_nodes: int = 32
 default_number_of_variables: int = 16
 maximum_value: int = 32
 
-class Generator():
+
+class Generator:
     total_leaves = 0
 
     def __init__(self):
-        pass
+        random.seed()
 
-    def __init__(self, seed: int):
-        random.seed(seed)
-
-    def add_variables(self, number: int) -> None:
-        '''Changes some leaf nodes to be variables.'''
-        while number > 0:
-            length = len(leaf_nodes)
-            rand = random.randint(0, length-1)
-            leaf_nodes[rand]
-
-    def random_function(self, nodes: int = default_number_of_nodes, variables: int = default_number_of_variables) -> Expression:
+    def random_function(self, nodes: int = default_number_of_nodes, variables: int = default_number_of_variables) \
+            -> Expression:
         leaves = []
 
         # Generate a random plan for 'var' and 'value' leaves
@@ -36,9 +28,10 @@ class Generator():
         function = self.randomize_node(nodes, leaves)
         return function
 
-    def split(self, number: int) -> int:
+    @staticmethod
+    def split(number: int) -> (int, int):
         '''Randomly divides a number in two with a minimum size of 1.'''
-        value = random.randint(1,number-1)
+        value = random.randint(1, number-1)
         return value, number - value
 
     def randomize_node(self, nodes: int, leaves: []) -> Expression:
@@ -51,11 +44,11 @@ class Generator():
                 node = Var()
             else:
                 node = Value()
-                node.set_number(random.randint(0, maximum_value))
+                node.set_number(random.randint(15, maximum_value))
             return node
 
         # If this is a branch, make it a math operator
-        num = random.randint(0,9)
+        num = random.randint(0, 9)
         if num == 0:
             node = Add()
         elif num == 1:

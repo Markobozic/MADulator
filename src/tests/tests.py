@@ -1,9 +1,8 @@
-import sys
-sys.path.append("..")
 import keyboard
 import pyaudio
 import time
-from generator import *
+import array
+from src.generator import *
 from threading import Thread
 
 PyAudio = pyaudio.PyAudio
@@ -15,31 +14,41 @@ WINDOW_WIDTH = 1024
 WINDOW_HEIGHT = 512
 
 done = False
-gen = Generator(1)
-function = gen.random_function()
+gen = Generator()
+func = gen.random_function()
 position = 0
 
+
+# def callback(in_data, frame_count, time_info, status):
+#     global done
+#     global playing
+#     global position
+#     data = []
+#     for i in range(position, position + frame_count):
+#         data.append(function.eval(i) % 256)
+#     print(data)
+#     position += frame_count
+#     if keyboard.is_pressed('space'):
+#         return data, pyaudio.paComplete
+#     if keyboard.is_pressed('esc'):
+#         done = True
+#         return data, pyaudio.paComplete
+#     return data, pyaudio.paContinue
+
 def callback(in_data, frame_count, time_info, status):
-    global done
-    global playing
-    global position
-    values = []
-    for i in range (position, position + frame_count):
-        values.append(chr(function.eval(i) % 256))
-    data = ''.join(values)
+    global done, playing, position
+    data = []
+    for i in range(position, position + frame_count):
+        data.append(func.eval(i) % 256)
     position += frame_count
-    if keyboard.is_pressed('space'):
-        return (data, pyaudio.paComplete)
-    if keyboard.is_pressed('esc'):
-        done = True
-        return (data, pyaudio.paComplete)
-    return (data, pyaudio.paContinue)
+    print(array.array('B', data).tostring())
+    return array.array('B', data).tostring(), pyaudio.paContinue
 
 def main():
-    global function
+    global func
     global done
     while not done:
-        print(function)
+        print(func)
 
         # Start audio
         p = PyAudio()
@@ -54,6 +63,7 @@ def main():
         stream.stop_stream()
         stream.close()
         p.terminate()
-        function = gen.random_function()
+        func = gen.random_function()
+
 
 main()
