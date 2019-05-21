@@ -1,4 +1,6 @@
 from expression import *
+from pyqtgraph.Qt import QtCore
+import pyqtgraph as pg
 
 class Editor():
 
@@ -8,7 +10,7 @@ class Editor():
     def __init__(self):
         pass
 
-    def new_key(self, key: QKeyEvent, function: Expression) -> Expression:
+    def new_key(self, key: QtCore.Qt.Key, function: Expression) -> Expression:
         root = function
         stack = function
 
@@ -18,10 +20,10 @@ class Editor():
             return self.nav_left()
         elif key == Qt.Key_Right:
             return self.nav_right()
-        elif key == Qt.Key_Plus or key == Qt.Key_Minus or key == Qt.Key_Asterisk
-        or key == Qt.Key_Slash or key == Qt.Key_Percent or key == Qt.Key_Less
-        or key == Qt.Key_Greater or key == Qt.Key_Ampersand or key == Qt.Key_Bar
-        or key == Qt.Key_AsciiCircum:
+        elif (key == Qt.Key_Plus or key == Qt.Key_Minus or key == Qt.Key_Asterisk
+            or key == Qt.Key_Slash or key == Qt.Key_Percent or key == Qt.Key_Less
+            or key == Qt.Key_Greater or key == Qt.Key_Ampersand or key == Qt.Key_Bar
+            or key == Qt.Key_AsciiCircum):
             return self.replace('o', key)
         elif key == Qt.Key_T or key == Qt.Key_V:
             return self.replace('v', key)
@@ -41,14 +43,14 @@ class Editor():
     def nav_left(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
-        root = root.left
+        root = root.get_left()
         stack.append(root)
         return root
 
     def nav_right(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
-        root = root.right
+        root = root.get_right()
         stack.append(root)
         return root
 
@@ -62,28 +64,37 @@ class Editor():
             root = stack.pop()
         return root
 
-    def replace(self, new_op_type: str, key: QKeyEvent) -> Expression:
+    def replace(self, new_op_type: str, key: QtCore.Qt.Key) -> Expression:
 
         # 1. Val/Var -> Val/Var/Math
         if instance(root, Value) or instance(root, Var):
             root = self.v_to_math(key)
 
         # 2. Math -> Math
-        if not instance(root, Value) and not instance(root, Var)
-            and new_op_type == 'o':
+        if (not instance(root, Value) and not instance(root, Var)
+            and new_op_type == 'o'):
             root = self.math_to_math(key)
 
         # 3. Math -> Val/Var
-        if not instance(root, Value) and not instance(root, Var)
-            and new_op_type == 'v':
+        if (not instance(root, Value) and not instance(root, Var)
+            and new_op_type == 'v'):
             root = self.math_to_v(key)
+
+        # Set default children value
+        if new_op_type == 'o':
+            val = Value()
+            val.set_number(1)
+            if not root.get_left():
+                root.set_left(val)
+            if not root.get_right():
+                root.set_right(val)
 
         stack.pop()
         stack.append(root)
 
         return root
 
-    def v_to_math(self, key: QKeyEvent) -> Expression:
+    def v_to_math(self, key: QtCore.Qt.Key) -> Expression:
 
         if key == Qt.Key_Plus:
             root = Add()
@@ -112,18 +123,18 @@ class Editor():
 
         return root
 
-    def math_to_math(self, key: QKeyEvent) -> Expression:
-        left = root.left
-        right = root.right
+    def math_to_math(self, key: QtCore.Qt.Key) -> Expression:
+        left = root.get_left()
+        right = root.get_right()
         root = v_to_math(key)
-        root.left = left
-        root.right = right
+        root.set_left(left)
+        root.set_right(right)
 
         return root
 
-    def math_to_v(self, key: QKeyEvent) -> Expression:
-        root.left = None
-        root.right = None
+    def math_to_v(self, key: QtCore.Qt.Key) -> Expression:
+        root.set_left(None)
+        root.set_left(None)
         root = v_to_math(key)
 
         return root

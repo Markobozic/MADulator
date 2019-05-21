@@ -15,6 +15,12 @@ class Expression:
     def set_right(self, expression: 'Expression'):
         self.right = expression
 
+    def get_left(self) -> 'Expression':
+        return self.left
+
+    def get_right(self) -> 'Expression':
+        return self.right
+
 
 class Value(Expression):
 
