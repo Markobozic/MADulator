@@ -19,8 +19,9 @@ class Editor():
         elif key == "right":
             return self.nav_right()
         elif key == '+' or key == '-' or key == '*' or key == '/' or key == '%'
-            or key == '<' or key == '>' or key == '&' or key == '|' or key == '^'
-            or key == 't' or key == 'v':
+            or key == '<' or key == '>' or key == '&' or key == '|' or key == '^':
+            return self.replace('o', key)
+        elif key == 't' or key == 'v':
             return self.replace('v', key)
         elif key == "space":
             return self.play()
@@ -67,7 +68,7 @@ class Editor():
 
         # 2. Math -> Math
         if not instance(root, Value) and not instance(root, Var)
-            and new_op_type != 'v':
+            and new_op_type == 'o':
             root = self.math_to_math(key)
 
         # 3. Math -> Val/Var
