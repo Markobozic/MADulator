@@ -6,6 +6,7 @@ class Editor():
 
     path = []                   # Keeps track of path from true root to current root
     root = None                 # Current root
+    parent = []                 # Parent of current root
 
     def __init__(self):
         pass
@@ -37,6 +38,11 @@ class Editor():
     def nav_up(self) -> Expression:
         if len(path) == 0:
             return root
+        proot, child = parent.pop()
+        if child == 'l':
+            proot.set_left(root)
+        else:
+            proot.set_right(root)
         root = path.pop()
         return root
 
@@ -44,6 +50,7 @@ class Editor():
     def nav_left(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
+        parent.append((root, 'l'))
         root = root.get_left()
         path.append(root)
         return root
@@ -52,15 +59,16 @@ class Editor():
     def nav_right(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
+        parent.append((root, 'r'))
         root = root.get_right()
         path.append(root)
         return root
 
     # Navigate to the true root of the function
     def load_function(self) -> Expression:
-        root = path[0]
-        path.clear()
-        
+        while len(path) != 0:
+            self.nav_up()
+
         return root
 
     # Replace an expression with another expression
@@ -89,6 +97,7 @@ class Editor():
             if not root.get_right():
                 root.set_right(val)
 
+        # Update list to reflect updated expression node
         path.pop()
         path.append(root)
 
