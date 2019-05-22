@@ -58,8 +58,9 @@ class Editor():
 
     # Navigate to the true root of the function
     def load_function(self) -> Expression:
-        while len(path) != 0:
-            root = path.pop()
+        root = path[0]
+        path.clear()
+        
         return root
 
     # Replace an expression with another expression
