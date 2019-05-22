@@ -4,15 +4,16 @@ import pyqtgraph as pg
 
 class Editor():
 
-    stack = None
-    root = None
+    path = []                   # Keeps track of path from true root to current root
+    root = None                 # Current root
 
     def __init__(self):
         pass
 
+    # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key, function: Expression) -> Expression:
         root = function
-        stack = function
+        path.append(root)
 
         if key == Qt.Key_Up:
             return self.nav_up()
@@ -28,42 +29,40 @@ class Editor():
         elif key == Qt.Key_T or key == Qt.Key_V:
             return self.replace('v', key)
         elif key == Qt.Key_Space:
-            return self.play()
-        elif key == Qt.Key_Excape:
-            return self.escape()
+            return self.load_function()
 
         return root
 
+    # Navigate back up to parent root
     def nav_up(self) -> Expression:
-        if len(stack) == 0:
+        if len(path) == 0:
             return root
-        root = stack.pop()
+        root = path.pop()
         return root
 
+    # Navigate to left child
     def nav_left(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
         root = root.get_left()
-        stack.append(root)
+        path.append(root)
         return root
 
+    # Navigate to right child
     def nav_right(self) -> Expression:
         if instance(root, Value) or instance(root, Var):
             return root
         root = root.get_right()
-        stack.append(root)
+        path.append(root)
         return root
 
-    def play(self) -> Expression:
-        while len(stack) != 0:
-            root = stack.pop()
+    # Navigate to the true root of the function
+    def load_function(self) -> Expression:
+        while len(path) != 0:
+            root = path.pop()
         return root
 
-    def escape(self) -> Expression:
-        while len(stack) != 0:
-            root = stack.pop()
-        return root
-
+    # Replace an expression with another expression
     def replace(self, new_op_type: str, key: QtCore.Qt.Key) -> Expression:
 
         # 1. Val/Var -> Val/Var/Math
@@ -80,7 +79,7 @@ class Editor():
             and new_op_type == 'v'):
             root = self.math_to_v(key)
 
-        # Set default children value
+        # Set default children value for expressions that must have children
         if new_op_type == 'o':
             val = Value()
             val.set_number(1)
@@ -89,11 +88,13 @@ class Editor():
             if not root.get_right():
                 root.set_right(val)
 
-        stack.pop()
-        stack.append(root)
+        path.pop()
+        path.append(root)
 
         return root
 
+    # Change an expression with no children (Value or Var)
+    # to one that may have children
     def v_to_math(self, key: QtCore.Qt.Key) -> Expression:
 
         if key == Qt.Key_Plus:
@@ -123,6 +124,8 @@ class Editor():
 
         return root
 
+    # Change an expression that must have children to a new
+    # expression that must have children (not Value or Var)
     def math_to_math(self, key: QtCore.Qt.Key) -> Expression:
         left = root.get_left()
         right = root.get_right()
@@ -132,6 +135,8 @@ class Editor():
 
         return root
 
+    # Change an expression that must have children to a new
+    # expression that does not have children (Value or Var)
     def math_to_v(self, key: QtCore.Qt.Key) -> Expression:
         root.set_left(None)
         root.set_left(None)
