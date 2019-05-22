@@ -1,28 +1,34 @@
 from pyqtgraph.Qt import QtCore
-import expression import *
+from expression import *
 from pyaudio import *
 
-class Function():
+class Samples():
 
-    def __init__(self, signal1):
+    def __init__(self, signal: QtCore.pyqtSignal = None):
         self.expression = Expression()
-        self.signal1 = signal1
+        self.signal = signal
         self.samples = []
         self.position = 0
 
-    def pyaudio_callback(self, in_data, frame_count, time_info, status):
+    def pyaudio_callback(self, in_data, frame_count, time_info, status) -> (str, int):
+        sound_samples = []
         for i in range(self.position, self.position + frame_count):
             value = self.expression.eval(i) % 256
             self.samples.append(value)
-        data = ''.join(self.samples[-frame_count:]
+            sound_samples.append(chr(value))
+        data = ''.join(sound_samples)
         self.position += frame_count
-        self.signal.emit(self.samples[-1024:])
-        return data, pyaudio.paContinue
+        if self.signal is not None and len(self.samples) > 1024:
+            self.signal.emit(self.samples[-1024:])
+        return data, paContinue
 
-    def set_expression(self, expression):
+    def get_expression(self) -> Expression:
+        return self.expression
+
+    def set_expression(self, expression: Expression) -> None:
         self.expression = expression
         self.reset()
 
-    def reset(self):
-        self.samples.clear()
+    def reset(self) -> None:
         self.position = 0
+        self.samples.clear()
