@@ -1,8 +1,8 @@
-from expression import *
+from src.expression import *
 import random
 
 default_number_of_nodes: int = 32
-default_number_of_variables: int = 16
+default_number_of_variables: int = 3
 maximum_value: int = 32
 
 class Generator():
@@ -84,3 +84,7 @@ class Generator():
         node.left = self.randomize_node(left_nodes, leaves)
         node.right = self.randomize_node(right_nodes, leaves)
         return node
+
+
+if __name__ == '__main__':
+    temp = Generator(1).random_function()

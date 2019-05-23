@@ -2,8 +2,8 @@ from pyqtgraph.Qt import *
 import pyqtgraph as pg
 import pyaudio as pa
 import numpy as np
-from generator import Generator
-from samples import Samples
+from src.generator import Generator
+from src.samples import Samples
 
 BITRATE = 11050
 
