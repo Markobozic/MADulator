@@ -64,11 +64,11 @@ class Generator():
         elif num == 6:
             node = ShiftRight()
         elif num == 7:
-            node = BitOr()
+            node = BitAnd()
         elif num == 8:
             node = BitOr()
         elif num == 9:
-            node = BitOr()
+            node = BitXor()
         nodes -= 1
         left_nodes = 1
         right_nodes = 1
