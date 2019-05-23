@@ -1,9 +1,9 @@
 from expression import *
 import random
 
-default_number_of_nodes: int = 32
-default_number_of_variables: int = 16
-maximum_value: int = 32
+default_number_of_nodes: int = 10
+default_number_of_variables: int = 3
+maximum_value: int = 3200
 
 class Generator():
     total_leaves = 0
@@ -13,13 +13,6 @@ class Generator():
 
     def __init__(self, seed: int):
         random.seed(seed)
-
-    def add_variables(self, number: int) -> None:
-        '''Changes some leaf nodes to be variables.'''
-        while number > 0:
-            length = len(leaf_nodes)
-            rand = random.randint(0, length-1)
-            leaf_nodes[rand]
 
     def random_function(self, nodes: int = default_number_of_nodes, variables: int = default_number_of_variables) -> Expression:
         leaves = []
@@ -51,7 +44,7 @@ class Generator():
                 node = Var()
             else:
                 node = Value()
-                node.set_number(random.randint(0, maximum_value))
+                node.set_number(random.randint(1, maximum_value))
             return node
 
         # If this is a branch, make it a math operator
