@@ -1,7 +1,7 @@
 from expression import *
 import random
 
-default_number_of_nodes: int = 100
+default_number_of_nodes: int = 20
 default_variable_ratio: float = .5
 maximum_value: int = 320
 
