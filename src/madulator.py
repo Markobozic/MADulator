@@ -5,6 +5,7 @@ import numpy as np
 from generator import Generator
 from samples import Samples
 from waveform import Waveform
+from editer import Editor
 
 BITRATE = 11025
 
@@ -13,10 +14,11 @@ class Madulator(pg.GraphicsView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.generator = Generator(1)
+        self.expression = self.generator.random_function()
         self.setup_layout()
         self.setup_waveform()
         self.samples = Samples(self.waveform.data_available)
-        self.samples.set_expression(self.generator.random_function())
+        self.samples.set_expression(self.expression)
         self.setup_instructions()
         self.layout.nextRow()
         self.setup_spectrograph()
@@ -49,10 +51,14 @@ class Madulator(pg.GraphicsView):
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
             # Save editor expression to samples
+            self.editor
             exp = self.samples.get_expression()
             self.samples.set_expression(exp)
             self.stream.start_stream()
             self.editor_text.setText(str(exp))
+        else:
+            self.editor.new_key(ev.key())
+            # Value pop up stuff needed
 
     def setup_layout(self) -> None:
         self.layout = pg.GraphicsLayout(border=(100,100,100))
@@ -70,7 +76,7 @@ class Madulator(pg.GraphicsView):
         img = pg.ImageItem(np.random.normal(size=(100,100)), title="Spectrograph")
         self.spectrograph.addItem(img)
         self.spectrograph.autoRange()
-        
+
     def setup_instructions(self) -> None:
         text = '''
         <h1>MADulator</h1>
@@ -96,6 +102,7 @@ class Madulator(pg.GraphicsView):
         self.layout.addLabel(text, rowspan=3)
 
     def setup_editor(self) -> None:
+        self.editor = Editor(self.expression)
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
         self.editor_text.setText('Function here')

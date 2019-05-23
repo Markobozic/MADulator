@@ -8,11 +8,10 @@ class Editor():
     root = None                 # Current root
     parent = []                 # Parent of current root
 
-    def __init__(self):
-        pass
+    def __init__(self, function: Expression):
+        self.root = function
 
-    def create_value(self, function: Expression, val: int) -> Expression:
-        root = function
+    def create_value(self, val: int) -> Expression:
         path.append(root)
 
         root.set_left(None)
@@ -24,8 +23,7 @@ class Editor():
         return root
 
     # Take in user command to navigate and edit function
-    def new_key(self, key: QtCore.Qt.Key, function: Expression) -> Expression:
-        root = function
+    def new_key(self, key: QtCore.Qt.Key) -> Expression:
         path.append(root)
 
         if key == Qt.Key_Up:
