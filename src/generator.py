@@ -1,9 +1,9 @@
 from expression import *
 import random
 
-default_number_of_nodes: int = 10
-default_number_of_variables: int = 3
-maximum_value: int = 3200
+default_number_of_nodes: int = 100
+default_variable_ratio: float = .5
+maximum_value: int = 320
 
 class Generator():
     total_leaves = 0
@@ -14,12 +14,12 @@ class Generator():
     def __init__(self, seed: int):
         random.seed(seed)
 
-    def random_function(self, nodes: int = default_number_of_nodes, variables: int = default_number_of_variables) -> Expression:
+    def random_function(self, nodes: int = default_number_of_nodes, variable_ratio: float = default_variable_ratio) -> Expression:
         leaves = []
 
         # Generate a random plan for 'var' and 'value' leaves
-        for i in range(0, nodes + 1 // 2):
-            if i < variables:
+        for i in range(0, nodes):
+            if i < nodes * variable_ratio:
                 leaves.append('var')
             else:
                 leaves.append('value')
@@ -64,16 +64,16 @@ class Generator():
         elif num == 6:
             node = ShiftRight()
         elif num == 7:
-            node = BitAnd()
+            node = BitOr()
         elif num == 8:
             node = BitOr()
         elif num == 9:
-            node = BitXor()
+            node = BitOr()
         nodes -= 1
         left_nodes = 1
         right_nodes = 1
         if nodes > 2:
-            left_nodes, right_nodes = self.split(nodes - 1)
+            left_nodes, right_nodes = self.split(nodes)
         node.left = self.randomize_node(left_nodes, leaves)
         node.right = self.randomize_node(right_nodes, leaves)
         return node
