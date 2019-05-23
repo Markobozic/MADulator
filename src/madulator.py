@@ -4,19 +4,23 @@ import pyaudio as pa
 import numpy as np
 from generator import Generator
 from samples import Samples
+from waveform import Waveform
 
-BITRATE = 11050
+BITRATE = 11025
 
 class Madulator(pg.GraphicsView):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.generator = Generator(1)
-        self.samples = Samples()
-        self.samples.set_expression(self.generator.random_function())
         self.setup_layout()
-        self.setup_spectrograph()
+        self.setup_waveform()
+        self.samples = Samples(self.waveform.data_available)
+        self.samples.set_expression(self.generator.random_function())
         self.setup_instructions()
+        self.layout.nextRow()
+        self.setup_spectrograph()
+        self.layout.nextRow()
         self.setup_editor()
         self.setup_pyaudio()
         self.stream.start_stream()
@@ -57,6 +61,10 @@ class Madulator(pg.GraphicsView):
         self.setWindowTitle('MADulator')
         self.resize(1024, 720)
 
+    def setup_waveform(self) -> None:
+        self.waveform = Waveform()
+        self.layout.addItem(self.waveform)
+
     def setup_spectrograph(self) -> None:
         self.spectrograph = self.layout.addViewBox(lockAspect=True)
         img = pg.ImageItem(np.random.normal(size=(100,100)), title="Spectrograph")
@@ -85,8 +93,7 @@ class Madulator(pg.GraphicsView):
         <li>[esc] exit program</li>
         </ul>
         '''
-        self.layout.addLabel(text, rowspan=2)
-        self.layout.nextRow()
+        self.layout.addLabel(text, rowspan=3)
 
     def setup_editor(self) -> None:
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
