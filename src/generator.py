@@ -3,7 +3,7 @@ import random
 
 default_number_of_nodes: int = 20
 default_variable_ratio: float = .5
-maximum_value: int = 320
+maximum_value: int = 8 # calculated as 2^maximum_value
 
 class Generator():
     total_leaves = 0
@@ -44,7 +44,7 @@ class Generator():
                 node = Var()
             else:
                 node = Value()
-                node.set_number(random.randint(1, maximum_value))
+                node.set_number(2**random.randint(0, maximum_value))
             return node
 
         # If this is a branch, make it a math operator
