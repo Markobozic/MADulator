@@ -11,6 +11,18 @@ class Editor():
     def __init__(self):
         pass
 
+    def create_value(self, function: Expression, val: int) -> Expression:
+        root = function
+        path.append(root)
+
+        root.set_left(None)
+        root.set_left(None)
+
+        root = Value()
+        root.set_number(val)
+
+        return root
+
     # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key, function: Expression) -> Expression:
         root = function
@@ -27,7 +39,7 @@ class Editor():
             or key == Qt.Key_Greater or key == Qt.Key_Ampersand or key == Qt.Key_Bar
             or key == Qt.Key_AsciiCircum):
             return self.replace('o', key)
-        elif key == Qt.Key_T or key == Qt.Key_V:
+        elif key == Qt.Key_T '''or key == Qt.Key_V''':
             return self.replace('v', key)
         elif key == Qt.Key_Space:
             return self.load_function()
@@ -129,8 +141,11 @@ class Editor():
             root = Xor()
         elif key == Qt.Key_T:
             root = Var()
+        '''
         elif key == Qt.Key_V:
             root = Value()
+        '''
+
 
         return root
 
