@@ -123,7 +123,7 @@ class ShiftLeft(Expression):
         return self.left.eval(t) << (self.right.eval(t) % 32)
 
     def __str__(self) -> str:
-        return '(' + str(self.left) + ' << ' + str(self.right) + ')'
+        return '(' + str(self.left) + ' &lt;&lt; ' + str(self.right) + ')'
 
 class ShiftRight(Expression):
 
