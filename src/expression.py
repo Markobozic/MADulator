@@ -21,14 +21,16 @@ class Expression:
     def get_right(self) -> 'Expression':
         return self.right
 
-    def html_tree(self, path: list) -> str:
+    def html_tree(self, selected: 'Expression') -> str:
+        '''
         depth = len(path)
         if depth == 0:
             return ''
         selected = path[depth - 1]
-        return '<code>' + self.html_tree_node(path, selected) + '</code>'
+        '''
+        return '<code>' + self.html_tree_node(selected) + '</code>'
 
-    def html_tree_node(self, path: list, selected: 'Expression') -> str:
+    def html_tree_node(self, selected: 'Expression') -> str:
         html = ''
         if self == selected:
             html = html + '<span style="color:white">'
@@ -36,19 +38,23 @@ class Expression:
         if self == selected:
             html = html + '</span>'
         if self.left is not None:
-            if self.left in path:
-                html = html + '<span style="color:gray">' + self.left.html_tree_node(path, selected) + '</span>'
+            #if self.left in path:
+            html = html + '<span style="color:gray">' + self.left.html_tree_node(selected) + '</span>'
+            '''
             else:
                 html = html + str(self.left)
+            '''
         if self == selected:
             html = html + '<strong style="color:white"> ' + self.op() + ' </strong>'
         else:
             html = html + self.op()
         if self.right is not None:
-            if self.right in path:
-                html = html + '<span style="color:gray">' + self.right.html_tree_node(path, selected) + '</span>'
+            #if self.right in path:
+            html = html + '<span style="color:gray">' + self.right.html_tree_node(selected) + '</span>'
+            '''
             else:
                 html = html + str(self.right)
+            '''
         if self == selected:
             html = html + '<span style="color:white">'
         html = html + ')'
@@ -76,7 +82,7 @@ class Value(Expression):
         return str(self.number)
 
 class Add(Expression):
-    
+
     def __init__(self):
         pass
 

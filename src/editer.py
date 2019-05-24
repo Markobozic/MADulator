@@ -15,8 +15,8 @@ class Editor():
     def get_function(self) -> Expression:
         return self.path[0]
 
-    def get_path(self) -> list:
-        return self.path
+    def get_path(self) -> Expression:
+        return self.root
 
     # Navigate to the true root of the function
     def load_function(self) -> Expression:
@@ -64,7 +64,13 @@ class Editor():
 
     # Navigate back up to parent root
     def nav_up(self):
+        print(len(self.parents))
         if len(self.parents) != 0:
+            parent, child_dir = self.parents.pop()
+            self.path.pop()
+            self.root = parent
+
+            '''
             parent, child_dir = self.parents.pop()
             child = self.root
             self.root = parent
@@ -74,8 +80,7 @@ class Editor():
                 self.root.set_right(child)
             # Last one is already current root
             self.path.pop()
-            # This one is the parent to which we want to travel up to
-            self.path.pop()
+            '''
 
     # Navigate to left child
     def nav_left(self):
@@ -121,6 +126,17 @@ class Editor():
         self.path.pop()
         self.path.append(self.root)
 
+
+        if len(self.parents) != 0:
+            parent, child_dir = self.parents[len(self.parents) - 1]
+            child = self.root
+            self.root = parent
+            if child_dir == 'l':
+                self.root.set_left(child)
+            else:
+                self.root.set_right(child)
+            self.root = child
+        '''
         if len(self.parents) != 0:
             parent, child_dir = self.parents[len(self.parents) - 1]
             self.nav_up()
@@ -128,7 +144,7 @@ class Editor():
                 self.nav_left()
             else:
                 self.nav_right()
-
+        '''
     # Change an expression with no children (Value or Var)
     # to one that may have children
     def v_to_math(self, key: QtCore.Qt.Key):

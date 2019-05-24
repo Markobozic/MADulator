@@ -52,7 +52,7 @@ class Madulator(pg.GraphicsView):
             self.samples.set_expression(self.generator.random_function())
             self.stream.start_stream()
             exp = self.samples.get_expression()
-            self.editor_text.setText(exp.html_tree([exp, exp.left]))
+            self.editor_text.setText(exp.html_tree(exp.left))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
             exp = self.samples.get_expression()
@@ -63,6 +63,9 @@ class Madulator(pg.GraphicsView):
             val = self.get_number()
             if val != -1:
                 self.editor.create_value(val)
+            path = self.editor.get_path()
+            expression = self.editor.get_function()
+            self.editor_text.setText(expression.html_tree(path))
         else:
             self.editor.new_key(ev.key())
             path = self.editor.get_path()
