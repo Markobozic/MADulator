@@ -48,7 +48,7 @@ class Expression:
             if self.right in path:
                 html = html + '<span style="color:gray">' + self.right.html_tree_node(path, selected) + '</span>'
             else:
-                html = html + str(self.left)
+                html = html + str(self.right)
         if self == selected:
             html = html + '<span style="color:white">'
         html = html + ')'
