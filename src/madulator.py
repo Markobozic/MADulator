@@ -52,7 +52,7 @@ class Madulator(pg.GraphicsView):
             self.samples.set_expression(self.generator.random_function())
             self.stream.start_stream()
             exp = self.samples.get_expression()
-            self.editor_text.setText(str(exp))
+            self.editor_text.setText(exp.html_tree([exp, exp.left]))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
             exp = self.samples.get_expression()
