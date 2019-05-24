@@ -12,6 +12,9 @@ class Editor():
         self.root = function
         self.path.append(self.root)
 
+    def get_function(self) -> Expression:
+        return self.path[0]
+
     def get_path(self) -> list:
         return self.path
 
@@ -55,7 +58,7 @@ class Editor():
             self.replace('o', key)
         elif key == QtCore.Qt.Key.Key_T:
             self.replace('v', key)
-            
+
         print("edited:")
         print(self.root)
 
@@ -117,6 +120,14 @@ class Editor():
         # Update list to reflect updated expression node
         self.path.pop()
         self.path.append(self.root)
+
+        print(len(self.parents))
+        parent, child_dir = self.parents[len(self.parents) - 1]
+        self.nav_up()
+        if child_dir == 'l':
+            self.nav_left()
+        else:
+            self.nav_right()
 
     # Change an expression with no children (Value or Var)
     # to one that may have children

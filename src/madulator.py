@@ -65,6 +65,9 @@ class Madulator(pg.GraphicsView):
                 self.editor.create_value(val)
         else:
             self.editor.new_key(ev.key())
+            path = self.editor.get_path()
+            expression = self.editor.get_function()
+            self.editor_text.setText(expression.html_tree(path))
 
     def get_number(self) -> int:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
