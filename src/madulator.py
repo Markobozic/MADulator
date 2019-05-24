@@ -8,6 +8,10 @@ from waveform import Waveform
 from editer import Editor
 
 BITRATE = 11025
+default_val: int = 50
+min_val: int = 1
+max_val: int = 3200
+step_val: int = 1
 
 class Madulator(pg.GraphicsView):
 
@@ -56,11 +60,18 @@ class Madulator(pg.GraphicsView):
             self.stream.start_stream()
             self.editor_text.setText(str(exp))
         elif key == QtCore.Qt.Key.Key_V:
-            # Set up pop up window for value
-            val = None
-            self.editor.create_value(val)
+            val = self.get_number()
+            if val != -1:
+                self.editor.create_value(val)
         else:
             self.editor.new_key(ev.key())
+
+    def get_number(self) -> int:
+        val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
+            default_val, min_val, max_val, step_val)
+        if ok:
+            return val
+        return -1
 
     def setup_layout(self) -> None:
         self.layout = pg.GraphicsLayout(border=(100,100,100))

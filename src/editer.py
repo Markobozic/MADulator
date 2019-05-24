@@ -66,7 +66,7 @@ class Editor():
 
     # Navigate back up to parent root
     def nav_up(self):
-        if len(self.path) > 1:
+        if len(self.parents) != 0:
             parent, child_dir = self.parents.pop()
             child = self.root
             self.root = parent
