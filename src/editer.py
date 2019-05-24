@@ -121,13 +121,13 @@ class Editor():
         self.path.pop()
         self.path.append(self.root)
 
-        print(len(self.parents))
-        parent, child_dir = self.parents[len(self.parents) - 1]
-        self.nav_up()
-        if child_dir == 'l':
-            self.nav_left()
-        else:
-            self.nav_right()
+        if len(self.parents) != 0:
+            parent, child_dir = self.parents[len(self.parents) - 1]
+            self.nav_up()
+            if child_dir == 'l':
+                self.nav_left()
+            else:
+                self.nav_right()
 
     # Change an expression with no children (Value or Var)
     # to one that may have children
