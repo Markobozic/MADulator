@@ -32,18 +32,6 @@ class Value(Expression):
     def eval(self, t: int) -> int:
         return self.number
 
-    def get_number(self) -> int:
-        num = None
-        bad_num = True
-
-        while bad_num:
-            num = input("Input value: ")
-            if num > 0 and num <= 32:
-                bad_num = False
-        self.set_number(num)
-
-        return num
-
     def set_number(self, num: int) -> None:
         self.number = num
 
