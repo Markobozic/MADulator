@@ -10,7 +10,7 @@ from editer import Editor
 BITRATE = 11025
 default_val: int = 50
 min_val: int = 1
-max_val: int = 3200
+max_val: int = 2147483647 # Max value that QInputDialog.getInt() takes
 step_val: int = 1
 
 class Madulator(pg.GraphicsView):
