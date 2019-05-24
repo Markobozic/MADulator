@@ -37,7 +37,7 @@ class Editor():
     # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key):
         self.path.append(self.root)
-        print(key)
+
         print("current:")
         print(self.root)
 
@@ -55,14 +55,9 @@ class Editor():
             self.replace('o', key)
         elif key == QtCore.Qt.Key.Key_T:
             self.replace('v', key)
+            
         print("edited:")
         print(self.root)
-        '''
-        print("path:")
-        print(self.path)
-        print("parents:")
-        print(self.parents)
-        '''
 
     # Navigate back up to parent root
     def nav_up(self):
