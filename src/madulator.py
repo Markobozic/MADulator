@@ -26,6 +26,7 @@ class Madulator(pg.GraphicsView):
         self.setup_editor()
         self.setup_pyaudio()
         self.stream.start_stream()
+        self.editor_text.setText(str(self.expression))
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
@@ -50,15 +51,16 @@ class Madulator(pg.GraphicsView):
             self.editor_text.setText(str(exp))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
-            # Save editor expression to samples
-            self.editor
             exp = self.samples.get_expression()
             self.samples.set_expression(exp)
             self.stream.start_stream()
             self.editor_text.setText(str(exp))
+        elif key == QtCore.Qt.Key.Key_V:
+            # Set up pop up window for value
+            val = None
+            self.editor.create_value(val)
         else:
             self.editor.new_key(ev.key())
-            # Value pop up stuff needed
 
     def setup_layout(self) -> None:
         self.layout = pg.GraphicsLayout(border=(100,100,100))
@@ -95,6 +97,8 @@ class Madulator(pg.GraphicsView):
         <li>[&] replace expression with bitwise AND</li>
         <li>[|] replace expression with bitwise OR</li>
         <li>[^] replace expression with bitwise XOR</li>
+        <li>[&lt;] replace expression with shift left</li>
+        <li>[>] replace expression with shift right</li>
         <li>[space] apply changes / restart playback</li>
         <li>[esc] exit program</li>
         </ul>
@@ -105,4 +109,4 @@ class Madulator(pg.GraphicsView):
         self.editor = Editor(self.expression)
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
-        self.editor_text.setText('Function here')
+        self.editor_text.setText(str(self.expression))
