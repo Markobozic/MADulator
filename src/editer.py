@@ -24,13 +24,15 @@ class Editor():
 
     # Create a value node with user input
     def create_value(self, val: int):
-        self.path.append(self.root)
+        self.path.pop()
 
         self.root.set_left(None)
         self.root.set_left(None)
 
         self.root = Value()
         self.root.set_number(val)
+
+        self.path.append(self.root)
 
     # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key):
