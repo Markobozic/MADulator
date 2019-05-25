@@ -1,12 +1,16 @@
 from pyqtgraph.Qt import QtCore
-from expression import *
+from src.expression import *
 from pyaudio import *
+import array
+import numpy as np
 
-class Samples():
 
-    def __init__(self, signal: QtCore.pyqtSignal = None):
+class Samples:
+
+    def __init__(self, waveform_signal: QtCore.pyqtSignal = None, spectrogram_signal: QtCore.pyqtSignal = None):
         self.expression = Expression()
-        self.signal = signal
+        self.waveform_signal = waveform_signal
+        self.spectrogram_signal = spectrogram_signal
         self.samples = []
         self.position = 0
 
@@ -18,8 +22,9 @@ class Samples():
             sound_samples.append(chr(value))
         data = ''.join(sound_samples)
         self.position += frame_count
-        if self.signal is not None and len(self.samples) > 1024:
-            self.signal.emit(self.samples[-1024:])
+        if (self.waveform_signal and self.spectrogram_signal) is not None and len(self.samples) > 1024:
+            self.waveform_signal.emit(self.samples[-1024:])
+            self.spectrogram_signal.emit(np.frombuffer(array.array('B', self.samples[-1024:]).tobytes(), 'int8'))
         return data, paContinue
 
     def get_expression(self) -> Expression:

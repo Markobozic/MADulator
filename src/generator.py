@@ -1,9 +1,10 @@
-from expression import *
+from src.expression import *
 import random
 
 default_number_of_nodes: int = 10
 default_number_of_variables: int = 3
 maximum_value: int = 3200
+
 
 class Generator():
     total_leaves = 0
@@ -29,7 +30,7 @@ class Generator():
         function = self.randomize_node(nodes, leaves)
         return function
 
-    def split(self, number: int) -> int:
+    def split(self, number: int) -> tuple:
         '''Randomly divides a number in two with a minimum size of 1.'''
         value = random.randint(1,number-1)
         return value, number - value
