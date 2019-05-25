@@ -41,9 +41,6 @@ class Editor():
     def new_key(self, key: QtCore.Qt.Key):
         self.path.append(self.root)
 
-        print("current:")
-        print(self.root)
-
         if key == QtCore.Qt.Key.Key_Up:
             self.nav_up()
         elif key == QtCore.Qt.Key.Key_Left:
@@ -59,9 +56,6 @@ class Editor():
         elif key == QtCore.Qt.Key.Key_T:
             self.replace('v', key)
 
-        print("edited:")
-        print(self.root)
-
     # Navigate back up to parent root
     def nav_up(self):
         print(len(self.parents))
@@ -69,18 +63,6 @@ class Editor():
             parent, child_dir = self.parents.pop()
             self.path.pop()
             self.root = parent
-
-            '''
-            parent, child_dir = self.parents.pop()
-            child = self.root
-            self.root = parent
-            if child_dir == 'l':
-                self.root.set_left(child)
-            else:
-                self.root.set_right(child)
-            # Last one is already current root
-            self.path.pop()
-            '''
 
     # Navigate to left child
     def nav_left(self):
@@ -136,15 +118,7 @@ class Editor():
             else:
                 self.root.set_right(child)
             self.root = child
-        '''
-        if len(self.parents) != 0:
-            parent, child_dir = self.parents[len(self.parents) - 1]
-            self.nav_up()
-            if child_dir == 'l':
-                self.nav_left()
-            else:
-                self.nav_right()
-        '''
+
     # Change an expression with no children (Value or Var)
     # to one that may have children
     def v_to_math(self, key: QtCore.Qt.Key):

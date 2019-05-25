@@ -22,12 +22,6 @@ class Expression:
         return self.right
 
     def html_tree(self, selected: 'Expression') -> str:
-        '''
-        depth = len(path)
-        if depth == 0:
-            return ''
-        selected = path[depth - 1]
-        '''
         return '<code>' + self.html_tree_node(selected) + '</code>'
 
     def html_tree_node(self, selected: 'Expression') -> str:
@@ -38,23 +32,13 @@ class Expression:
         if self == selected:
             html = html + '</span>'
         if self.left is not None:
-            #if self.left in path:
             html = html + '<span style="color:gray">' + self.left.html_tree_node(selected) + '</span>'
-            '''
-            else:
-                html = html + str(self.left)
-            '''
         if self == selected:
             html = html + '<strong style="color:white"> ' + self.op() + ' </strong>'
         else:
             html = html + self.op()
         if self.right is not None:
-            #if self.right in path:
             html = html + '<span style="color:gray">' + self.right.html_tree_node(selected) + '</span>'
-            '''
-            else:
-                html = html + str(self.right)
-            '''
         if self == selected:
             html = html + '<span style="color:white">'
         html = html + ')'
