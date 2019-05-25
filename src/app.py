@@ -1,5 +1,5 @@
 from pyqtgraph.Qt import QtGui
-from madulator import Madulator
+from src.madulator import Madulator
 
 app = QtGui.QApplication([])
 mad = Madulator()

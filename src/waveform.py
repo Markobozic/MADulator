@@ -1,6 +1,6 @@
 from pyqtgraph.Qt import QtGui, QtCore
 import pyqtgraph as pg
-import numpy as np
+
 
 class Waveform(pg.PlotItem):
     data_available = QtCore.pyqtSignal(list)

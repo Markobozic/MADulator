@@ -1,12 +1,11 @@
-from pyqtgraph.Qt import *
-import pyqtgraph as pg
 import pyaudio as pa
-import numpy as np
-from generator import Generator
-from samples import Samples
-from waveform import Waveform
+from src.generator import Generator
+from src.samples import Samples
+from src.waveform import Waveform
+from src.spectrogram import *
 
 BITRATE = 11025
+
 
 class Madulator(pg.GraphicsView):
 
@@ -15,11 +14,11 @@ class Madulator(pg.GraphicsView):
         self.generator = Generator(1)
         self.setup_layout()
         self.setup_waveform()
-        self.samples = Samples(self.waveform.data_available)
+        self.setup_spectrograph()
+        self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
         self.samples.set_expression(self.generator.random_function())
         self.setup_instructions()
         self.layout.nextRow()
-        self.setup_spectrograph()
         self.layout.nextRow()
         self.setup_editor()
         self.setup_pyaudio()
@@ -66,11 +65,9 @@ class Madulator(pg.GraphicsView):
         self.layout.addItem(self.waveform)
 
     def setup_spectrograph(self) -> None:
-        self.spectrograph = self.layout.addViewBox(lockAspect=True)
-        img = pg.ImageItem(np.random.normal(size=(100,100)), title="Spectrograph")
-        self.spectrograph.addItem(img)
-        self.spectrograph.autoRange()
-        
+        self.spectrograph = SpectrogramWidget(BITRATE)
+        self.layout.addItem(self.spectrograph)
+
     def setup_instructions(self) -> None:
         text = '''
         <h1>MADulator</h1>
