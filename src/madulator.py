@@ -1,8 +1,9 @@
-from pyqtgraph.Qt import *
 import pyqtgraph as pg
 import pyaudio as pa
 import numpy as np
 from src.generator import Generator
+from src.spectogram import *
+from PyQt5 import QtCore, QtGui
 from src.samples import Samples
 
 BITRATE = 11050
@@ -58,6 +59,7 @@ class Madulator(pg.GraphicsView):
         self.resize(1024, 720)
 
     def setup_spectrograph(self) -> None:
+        self.widget = SpectrogramWidget()
         self.spectrograph = self.layout.addViewBox(lockAspect=True)
         img = pg.ImageItem(np.random.normal(size=(100,100)), title="Spectrograph")
         self.spectrograph.addItem(img)
