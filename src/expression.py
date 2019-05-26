@@ -28,7 +28,8 @@ class Expression:
         html = ''
         if self == selected:
             html = html + '<span style="color:white">'
-        html = html + '('
+        if not isinstance(self, Value) and not isinstance(self, Var):
+            html = html + '('
         if self == selected:
             html = html + '</span>'
         if self.left is not None:
@@ -41,7 +42,8 @@ class Expression:
             html = html + '<span style="color:gray">' + self.right.html_tree_node(selected) + '</span>'
         if self == selected:
             html = html + '<span style="color:white">'
-        html = html + ')'
+        if not isinstance(self, Value) and not isinstance(self, Var):
+            html = html + ')'
         if self == selected:
             html = html + '</span>'
         return html
