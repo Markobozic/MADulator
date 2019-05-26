@@ -1,5 +1,6 @@
 import pyaudio as pa
 import numpy as np
+import copy
 import pickle
 from generator import Generator
 from samples import Samples
@@ -11,10 +12,12 @@ BITRATE = 11025
 
 class Madulator(pg.GraphicsView):
 
+    function_index = 1
+    generator = Generator(function_index)
+    expression = generator.random_function()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.generator = Generator(1)
-        self.expression = self.generator.random_function()
         self.setup_layout()
         self.setup_waveform()
         self.setup_instructions()
@@ -22,10 +25,19 @@ class Madulator(pg.GraphicsView):
         self.setup_spectrograph()
         self.layout.nextRow()
         self.setup_editor()
+        self.setup_index()
         self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
         self.samples.set_expression(self.expression)
+        self.randomize_function()
         self.setup_pyaudio()
         self.stream.start_stream()
+
+    def randomize_function(self) -> None:
+        self.generator = Generator(self.function_index)
+        self.expression = self.generator.random_function()
+        self.samples.set_expression(copy.deepcopy(self.expression))
+        #self.editor = Editor(copy.deepcopy(self.expression))
+        self.editor_text.setText(self.expression.html_tree([self.expression]))
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
@@ -64,10 +76,8 @@ class Madulator(pg.GraphicsView):
             self.stream.start_stream()
         elif key == QtCore.Qt.Key.Key_R:
             self.stream.stop_stream()
-            self.samples.set_expression(self.generator.random_function())
+            self.randomize_function()
             self.stream.start_stream()
-            exp = self.samples.get_expression()
-            self.editor_text.setText(exp.html_tree([exp]))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
             # Save editor expression to samples
@@ -75,6 +85,15 @@ class Madulator(pg.GraphicsView):
             self.samples.set_expression(exp)
             self.stream.start_stream()
             self.editor_text.setText(str(exp))
+        elif key == QtCore.Qt.Key.Key_BracketLeft:
+            if self.function_index > 1:
+                self.function_index = self.function_index - 1
+            self.randomize_function()
+            self.index_text.setText("Random function index: " + str(self.function_index))
+        elif key == QtCore.Qt.Key.Key_BracketRight:
+            self.function_index = self.function_index + 1
+            self.randomize_function()
+            self.index_text.setText("Random function index: " + str(self.function_index))
 
     def setup_layout(self) -> None:
         self.layout = pg.GraphicsLayout(border=(100,100,100))
@@ -100,6 +119,8 @@ class Madulator(pg.GraphicsView):
         <li>[R] generate random function</li>
         <li>[S] save function to file</li>
         <li>[L] load function from file</li>
+        <li>[[] decreate random function index</li>
+        <li>[]] increase random function index</li>
         <li>[up] [left] [right] navigate function</li>
         <li>[V] replace expression with value (integer)</li>
         <li>[T] replace expression with variable</li>
@@ -115,9 +136,14 @@ class Madulator(pg.GraphicsView):
         <li>[ESC] exit program</li>
         </ul>
         '''
-        self.layout.addLabel(text, rowspan=3)
+        self.layout.addLabel(text, rowspan=2)
 
     def setup_editor(self) -> None:
-        self.editor_text = pg.LabelItem(name='Test', colspan=2)
+        self.editor_text = pg.LabelItem(name='Editor')
         self.layout.addItem(self.editor_text)
         self.editor_text.setText(self.expression.html_tree([self.expression]))
+
+    def setup_index(self) -> None:
+        self.index_text = pg.LabelItem(name='Index')
+        self.layout.addItem(self.index_text)
+        self.index_text.setText("Random function index: " + str(self.function_index))
