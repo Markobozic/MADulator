@@ -26,19 +26,28 @@ class Editor():
         return self.root
 
     # Create a value node with user input
-    def create_value(self, val: int):
-        self.path.pop()
-
+    def create_value(self, val: int) -> None:
         self.root.set_left(None)
         self.root.set_left(None)
 
         self.root = Value()
         self.root.set_number(val)
 
+        self.path.pop()
         self.path.append(self.root)
 
+        if len(self.parents) != 0:
+            parent, child_dir = self.parents[len(self.parents) - 1]
+            child = self.root
+            self.root = parent
+            if child_dir == 'l':
+                self.root.set_left(child)
+            else:
+                self.root.set_right(child)
+            self.root = child
+
     # Take in user command to navigate and edit function
-    def new_key(self, key: QtCore.Qt.Key):
+    def new_key(self, key: QtCore.Qt.Key) -> None:
         self.path.append(self.root)
 
         if key == QtCore.Qt.Key.Key_Up:
@@ -57,28 +66,28 @@ class Editor():
             self.replace('v', key)
 
     # Navigate back up to parent root
-    def nav_up(self):
+    def nav_up(self) -> None:
         if len(self.parents) != 0:
             parent, child_dir = self.parents.pop()
             self.path.pop()
             self.root = parent
 
     # Navigate to left child
-    def nav_left(self):
+    def nav_left(self) -> None:
         if not isinstance(self.root, Value) and not isinstance(self.root, Var):
             self.parents.append((self.root, 'l'))
             self.root = self.root.get_left()
             self.path.append(self.root)
 
     # Navigate to right child
-    def nav_right(self):
+    def nav_right(self) -> None:
         if not isinstance(self.root, Value) and not isinstance(self.root, Var):
             self.parents.append((self.root, 'r'))
             self.root = self.root.get_right()
             self.path.append(self.root)
 
     # Replace an expression with another expression
-    def replace(self, new_op_type: str, key: QtCore.Qt.Key):
+    def replace(self, new_op_type: str, key: QtCore.Qt.Key) -> None:
 
         # 1. Val/Var -> Val/Var/Math
         if isinstance(self.root, Value) or isinstance(self.root, Var):
@@ -89,7 +98,7 @@ class Editor():
             and new_op_type == 'o'):
             self.math_to_math(key)
 
-        # 3. Math -> Val/Var
+        # 3. Math -> Var
         if (not isinstance(self.root, Value) and not isinstance(self.root, Var)
             and new_op_type == 'v'):
             self.math_to_v(key)
@@ -119,7 +128,7 @@ class Editor():
 
     # Change an expression with no children (Value or Var)
     # to one that may have children
-    def v_to_math(self, key: QtCore.Qt.Key):
+    def v_to_math(self, key: QtCore.Qt.Key) -> None:
 
         if key == QtCore.Qt.Key.Key_Plus:
             self.root = Add()
@@ -146,7 +155,7 @@ class Editor():
 
     # Change an expression that must have children to a new
     # expression that must have children (not Value or Var)
-    def math_to_math(self, key: QtCore.Qt.Key):
+    def math_to_math(self, key: QtCore.Qt.Key) -> None:
         left = self.root.get_left()
         right = self.root.get_right()
         self.v_to_math(key)
@@ -154,8 +163,8 @@ class Editor():
         self.root.set_right(right)
 
     # Change an expression that must have children to a new
-    # expression that does not have children (Value or Var)
-    def math_to_v(self, key: QtCore.Qt.Key):
+    # expression of type Var
+    def math_to_v(self, key: QtCore.Qt.Key) -> None:
         self.root.set_left(None)
         self.root.set_left(None)
-        self.v_to_math(key)
+        self.root = Var()
