@@ -106,12 +106,10 @@ class Editor():
 
         # Set default children value for expressions that must have children
         if new_op_type == 'o':
-            val = Value()
-            val.set_number(1)
             if not new_node.get_left():
-                new_node.set_left(val)
+                new_node.set_left(Value())
             if not new_node.get_right():
-                new_node.set_right(val)
+                new_node.set_right(Value())
 
         self.connect_nodes(new_node)
 
