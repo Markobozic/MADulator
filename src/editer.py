@@ -11,6 +11,11 @@ class Editor():
         self.root = function
         self.path.append(self.root)
 
+    def set_function(self, function: Expression):
+        self.root = function
+        self.path.clear()
+        self.path.append(self.root)
+
     def get_function(self) -> Expression:
         return self.path[0]
 

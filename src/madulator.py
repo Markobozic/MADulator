@@ -50,15 +50,25 @@ class Madulator(pg.GraphicsView):
             QtCore.QCoreApplication.quit()
         elif key == QtCore.Qt.Key.Key_R:
             self.stream.stop_stream()
-            self.samples.set_expression(self.generator.random_function())
+            self.expression = self.generator.random_function()
+            expression = 'Expression()'
+            expression = copy.deepcopy(self.expression)
+            self.samples.set_expression(expression)
             self.stream.start_stream()
-            exp = self.samples.get_expression()
-            self.editor_text.setText(exp.html_tree(exp.left))
+            function = 'Expression()'
+            function = copy.deepcopy(self.expression)
+            self.editor.set_function(function)
+            path = self.editor.get_path()
+            exp = self.editor.get_function()
+            self.editor_text.setText(exp.html_tree(path))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
             path = self.editor.get_path()
             exp = self.editor.get_function()
-            self.samples.set_expression(exp)
+            self.expression = exp
+            function = 'Expression()'
+            function = copy.deepcopy(self.expression)
+            self.samples.set_expression(function)
             self.stream.start_stream()
             self.editor_text.setText(exp.html_tree(path))
         elif key == QtCore.Qt.Key.Key_V:
@@ -130,4 +140,6 @@ class Madulator(pg.GraphicsView):
         self.editor = Editor(function)
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
-        self.editor_text.setText(str(self.expression))
+        path = self.editor.get_path()
+        exp = self.editor.get_function()
+        self.editor_text.setText(exp.html_tree(path))
