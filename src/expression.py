@@ -67,6 +67,7 @@ class Value(Expression):
     def __str__(self) -> str:
         return str(self.number)
 
+
 class Add(Expression):
 
     def __init__(self):
@@ -81,6 +82,7 @@ class Add(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' + ' + str(self.right) + ')'
 
+
 class Sub(Expression):
 
     def __init__(self):
@@ -94,6 +96,7 @@ class Sub(Expression):
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' - ' + str(self.right) + ')'
+
 
 class Mult(Expression):
 
@@ -132,6 +135,7 @@ class Div(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' / ' + str(self.right) + ')'
 
+
 class Var(Expression):
 
     def __init__(self):
@@ -145,6 +149,7 @@ class Var(Expression):
 
     def __str__(self) -> str:
         return 't'
+
 
 class ShiftLeft(Expression):
 
@@ -160,6 +165,7 @@ class ShiftLeft(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' &lt;&lt; ' + str(self.right) + ')'
 
+
 class ShiftRight(Expression):
 
     def __init__(self):
@@ -173,6 +179,7 @@ class ShiftRight(Expression):
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' >> ' + str(self.right) + ')'
+
 
 class Mod(Expression):
 
@@ -194,6 +201,7 @@ class Mod(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' % ' + str(self.right) + ')'
 
+
 class BitAnd(Expression):
 
     def __init__(self):
@@ -208,6 +216,7 @@ class BitAnd(Expression):
     def __str__(self) -> str:
         return '(' + str(self.left) + ' & ' + str(self.right) + ')'
 
+
 class BitOr(Expression):
 
     def __init__(self):
@@ -221,6 +230,7 @@ class BitOr(Expression):
 
     def __str__(self) -> str:
         return '(' + str(self.left) + ' | ' + str(self.right) + ')'
+
 
 class BitXor(Expression):
 
