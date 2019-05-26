@@ -55,10 +55,11 @@ class Madulator(pg.GraphicsView):
             self.editor_text.setText(exp.html_tree(exp.left))
         elif key == QtCore.Qt.Key.Key_Space:
             self.stream.stop_stream()
-            exp = self.samples.get_expression()
+            path = self.editor.get_path()
+            exp = self.editor.get_function()
             self.samples.set_expression(exp)
             self.stream.start_stream()
-            self.editor_text.setText(str(exp))
+            self.editor_text.setText(exp.html_tree(path))
         elif key == QtCore.Qt.Key.Key_V:
             val = self.get_number()
             if val != -1:

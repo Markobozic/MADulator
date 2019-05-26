@@ -58,7 +58,6 @@ class Editor():
 
     # Navigate back up to parent root
     def nav_up(self):
-        print(len(self.parents))
         if len(self.parents) != 0:
             parent, child_dir = self.parents.pop()
             self.path.pop()
@@ -107,7 +106,6 @@ class Editor():
         # Update list to reflect updated expression node
         self.path.pop()
         self.path.append(self.root)
-
 
         if len(self.parents) != 0:
             parent, child_dir = self.parents[len(self.parents) - 1]
