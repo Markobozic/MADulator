@@ -4,7 +4,7 @@ import pickle
 from generator import Generator
 from samples import Samples
 from waveform import Waveform
-from editer import Editor
+from editor import Editor
 import copy
 from spectrogram import *
 
