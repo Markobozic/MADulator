@@ -29,10 +29,10 @@ class Madulator(pg.GraphicsView):
         self.layout.nextRow()
         self.setup_editor()
         self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
-        self.samples.set_expression(self.expression)
+        self.copy_func_to_samples()
         self.setup_pyaudio()
         self.stream.start_stream()
-        self.editor_text.setText(str(self.expression))
+        self.copy_func_to_editor_and_display()
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
@@ -118,9 +118,7 @@ class Madulator(pg.GraphicsView):
         function = 'Expression()'
         function = copy.deepcopy(self.expression)
         self.editor.set_function(function)
-        selection = self.editor.get_selection()
-        exp = self.editor.get_function()
-        self.editor_text.setText(exp.html_tree(selection))
+        self.update_editor_info()
 
     def get_number(self) -> int:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
