@@ -94,6 +94,17 @@ class Madulator(pg.GraphicsView):
             self.function_index = self.function_index + 1
             self.randomize_function()
             self.index_text.setText("Random function index: " + str(self.function_index))
+        elif key == QtCore.Qt.Key.Key_I:
+            val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
+            if ok:
+                self.function_index = val
+                self.index_text.setText("Random function index: " + str(self.function_index))
+                self.generator = Generator(self.function_index)
+                self.expression = self.generator.random_function()
+                self.samples.set_expression(copy.deepcopy(self.expression))
+                #self.editor = Editor(copy.deepcopy(self.expression))
+                self.editor_text.setText(self.expression.html_tree([self.expression]))
+
 
     def setup_layout(self) -> None:
         self.layout = pg.GraphicsLayout(border=(100,100,100))
@@ -121,6 +132,7 @@ class Madulator(pg.GraphicsView):
         <li>[L] load function from file</li>
         <li>[[] decreate random function index</li>
         <li>[]] increase random function index</li>
+        <li>[I] goto function index</li>
         <li>[up] [left] [right] navigate function</li>
         <li>[V] replace expression with value (integer)</li>
         <li>[T] replace expression with variable</li>
