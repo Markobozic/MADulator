@@ -1,5 +1,5 @@
 from pyqtgraph.Qt import QtCore
-from src.expression import *
+from expression import *
 from pyaudio import *
 import array
 import numpy as np
