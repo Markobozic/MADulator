@@ -6,17 +6,12 @@ class Editor():
 
     path = []                   # Keeps track of path from true root to current root
     root = None                 # Current root
-    parents = []                # List of parents of current root
 
     def __init__(self, function: Expression):
         self.root = function
         self.path.append(self.root)
 
     def get_function(self) -> Expression:
-        count = 0
-        for n in self.path:
-            print(count, n)
-            count = count + 1
         return self.path[0]
 
     def get_path(self) -> Expression:
@@ -29,26 +24,24 @@ class Editor():
 
         return self.root
 
+    # Connect parent and child nodes
+    def connect_nodes(self, new_node: Expression) -> None:
+        if not len(self.path) == 1:
+            parent = self.path[len(self.path) - 2]
+            if parent.get_left() == self.root:
+                parent.set_left(new_node)
+            if parent.get_right() == self.root:
+                parent.set_right(new_node)
+        self.path.pop()
+        self.path.append(new_node)
+        self.root = new_node
+
     # Create a value node with user input
     def create_value(self, val: int) -> None:
-        self.root.set_left(None)
-        self.root.set_left(None)
+        new_node = Value()
+        new_node.set_number(val)
 
-        self.root = Value()
-        self.root.set_number(val)
-
-        self.path.pop()
-        self.path.append(self.root)
-
-        if len(self.parents) != 0:
-            parent, child_dir = self.parents[len(self.parents) - 1]
-            child = self.root
-            self.root = parent
-            if child_dir == 'l':
-                self.root.set_left(child)
-            else:
-                self.root.set_right(child)
-            self.root = child
+        self.connect_nodes(new_node)
 
     # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key) -> None:
@@ -69,106 +62,86 @@ class Editor():
 
     # Navigate back up to parent root
     def nav_up(self) -> None:
-        if len(self.parents) != 0:
-            parent, child_dir = self.parents.pop()
+        if len(self.path) > 1:
             self.path.pop()
-            self.root = parent
-        else:
-            self.path.pop()
+            self.root = self.path[len(self.path) - 1]
 
     # Navigate to left child
     def nav_left(self) -> None:
         if not isinstance(self.root, Value) and not isinstance(self.root, Var):
-            self.parents.append((self.root, 'l'))
             self.root = self.root.get_left()
             self.path.append(self.root)
 
     # Navigate to right child
     def nav_right(self) -> None:
         if not isinstance(self.root, Value) and not isinstance(self.root, Var):
-            self.parents.append((self.root, 'r'))
             self.root = self.root.get_right()
             self.path.append(self.root)
 
     # Replace an expression with another expression
     def replace(self, new_op_type: str, key: QtCore.Qt.Key) -> None:
+        new_node = None
 
         # 1. Val/Var -> Val/Var/Math
         if isinstance(self.root, Value) or isinstance(self.root, Var):
-            self.v_to_math(key)
+            new_node = self.v_to_math(key)
 
         # 2. Math -> Math
         if (not isinstance(self.root, Value) and not isinstance(self.root, Var)
             and new_op_type == 'o'):
-            self.math_to_math(key)
+            new_node = self.math_to_math(key)
 
         # 3. Math -> Var
         if (not isinstance(self.root, Value) and not isinstance(self.root, Var)
             and new_op_type == 'v'):
-            self.math_to_v(key)
+            new_node = Var()
 
         # Set default children value for expressions that must have children
         if new_op_type == 'o':
             val = Value()
             val.set_number(1)
-            if not self.root.get_left():
-                self.root.set_left(val)
-            if not self.root.get_right():
-                self.root.set_right(val)
+            if not new_node.get_left():
+                new_node.set_left(val)
+            if not new_node.get_right():
+                new_node.set_right(val)
 
-        # Update list to reflect updated expression node
-        self.path.pop()
-        self.path.append(self.root)
-
-        if len(self.parents) != 0:
-            parent, child_dir = self.parents[len(self.parents) - 1]
-            child = self.root
-            self.root = parent
-            if child_dir == 'l':
-                self.root.set_left(child)
-            else:
-                self.root.set_right(child)
-            self.root = child
+        self.connect_nodes(new_node)
 
     # Change an expression with no children (Value or Var)
     # to one that may have children
-    def v_to_math(self, key: QtCore.Qt.Key) -> None:
+    def v_to_math(self, key: QtCore.Qt.Key) -> Expression:
+        new_node = None
 
         if key == QtCore.Qt.Key.Key_Plus:
-            self.root = Add()
+            new_node = Add()
         elif key == QtCore.Qt.Key.Key_Minus:
-            self.root = Sub()
+            new_node = Sub()
         elif key == QtCore.Qt.Key.Key_Asterisk:
-            self.root = Mult()
+            new_node = Mult()
         elif key == QtCore.Qt.Key.Key_Slash:
-            self.root = Div()
+            new_node = Div()
         elif key == QtCore.Qt.Key.Key_Percent:
-            self.root = Mod()
+            new_node = Mod()
         elif key == QtCore.Qt.Key.Key_Less:
-            self.root = ShiftLeft()
+            new_node = ShiftLeft()
         elif key == QtCore.Qt.Key.Key_Greater:
-            self.root = ShiftRight()
+            new_node = ShiftRight()
         elif key == QtCore.Qt.Key.Key_Ampersand:
-            self.root = BitAnd()
+            new_node = BitAnd()
         elif key == QtCore.Qt.Key.Key_Bar:
-            self.root = BitOr()
+            new_node = BitOr()
         elif key == QtCore.Qt.Key.Key_AsciiCircum:
-            self.root = BitXor()
+            new_node = BitXor()
         elif key == QtCore.Qt.Key.Key_T:
-            self.root = Var()
+            new_node = Var()
+
+        return new_node
 
     # Change an expression that must have children to a new
     # expression that must have children (not Value or Var)
-    def math_to_math(self, key: QtCore.Qt.Key) -> None:
-        left = self.root.get_left()
-        right = self.root.get_right()
-        self.v_to_math(key)
-        self.root.set_left(left)
-        self.root.set_right(right)
+    def math_to_math(self, key: QtCore.Qt.Key) -> Expression:
+        new_node = self.v_to_math(key)
+        new_node.set_left(self.root.get_left())
+        new_node.set_right(self.root.get_right())
 
-    # Change an expression that must have children to a new
-    # expression of type Var
-    def math_to_v(self, key: QtCore.Qt.Key) -> None:
-        self.root.set_left(None)
-        self.root.set_left(None)
-        self.root = Var()
+        return new_node
