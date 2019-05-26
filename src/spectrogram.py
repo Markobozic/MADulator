@@ -1,6 +1,7 @@
 import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
+np.seterr(divide='ignore')
 
 CHUNK = 1024
 
