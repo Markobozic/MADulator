@@ -6,6 +6,7 @@ from generator import Generator
 from samples import Samples
 from waveform import Waveform
 from editer import Editor
+import copy
 
 BITRATE = 11025
 default_val: int = 50
@@ -124,7 +125,9 @@ class Madulator(pg.GraphicsView):
         self.layout.addLabel(text, rowspan=3)
 
     def setup_editor(self) -> None:
-        self.editor = Editor(self.expression)
+        function = 'Expression()'
+        function = copy.deepcopy(self.expression)
+        self.editor = Editor(function)
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
         self.editor_text.setText(str(self.expression))
