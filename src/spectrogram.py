@@ -1,20 +1,22 @@
 import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtCore, QtGui
+np.seterr(divide='ignore')
 
 CHUNK = 1024
-
+SPECTROGRAM_WIDTH = 256
 
 class SpectrogramWidget(pg.PlotItem):
     data_available = QtCore.pyqtSignal(np.ndarray)
 
     def __init__(self, bitrate: int):
+        np.seterr(divide='ignore')
         super(SpectrogramWidget, self).__init__()
         self.data_available.connect(self.update)
         self.bitrate = bitrate
-        self.img = pg.ImageItem(np.random.normal(size=(100,100)), title="Spectrograph")
+        self.img = pg.ImageItem(np.random.normal(size=(100,60)), title="Spectrograph")
         self.addItem(self.img)
-        self.img_array = np.zeros((1000, CHUNK//2+1))
+        self.img_array = np.zeros((SPECTROGRAM_WIDTH, CHUNK//2+1))
 
         position = np.array([0., 1., 0.5, 0.25, 0.75])
         colors = np.array([[0, 255, 255, 255], [255, 255, 0, 255], [0, 0, 0, 255], (0, 0, 255, 255), (255, 0, 0, 255)], dtype=np.ubyte)

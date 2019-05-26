@@ -6,8 +6,12 @@
 * portaudio19-dev
 
 ### Python modules
-* pyaudio
-* pygame
+* pyaudio ([How install pyaudio on Windows for python v3.7](https://stackoverflow.com/questions/54998028/how-do-i-install-pyaudio-on-python-3-7))
+* pyqt5
+* pyqtgraph
+* numpy
+* pickle (installed by default)
+
 
 ## Code Additions
 
