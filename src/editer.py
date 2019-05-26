@@ -11,15 +11,18 @@ class Editor():
         self.root = function
         self.path.append(self.root)
 
+    # Updates the function
     def set_function(self, function: Expression):
         self.root = function
         self.path.clear()
         self.path.append(self.root)
 
+    # Return the current function
     def get_function(self) -> Expression:
         return self.path[0]
 
-    def get_path(self) -> Expression:
+    # Return the current selection
+    def get_selection(self) -> Expression:
         return self.root
 
     # Navigate to the true root of the function
