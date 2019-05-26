@@ -14,15 +14,16 @@ class Madulator(pg.GraphicsView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.generator = Generator(1)
+        self.expression = self.generator.random_function()
         self.setup_layout()
         self.setup_waveform()
-        self.setup_spectrograph()
-        self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
-        self.samples.set_expression(self.generator.random_function())
         self.setup_instructions()
         self.layout.nextRow()
+        self.setup_spectrograph()
         self.layout.nextRow()
         self.setup_editor()
+        self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
+        self.samples.set_expression(self.expression)
         self.setup_pyaudio()
         self.stream.start_stream()
 
@@ -119,4 +120,4 @@ class Madulator(pg.GraphicsView):
     def setup_editor(self) -> None:
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
-        self.editor_text.setText('Function here')
+        self.editor_text.setText(self.expression.html_tree([self.expression]))

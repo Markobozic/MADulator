@@ -1,4 +1,4 @@
-from src.expression import *
+from expression import *
 import random
 
 default_number_of_nodes: int = 20
