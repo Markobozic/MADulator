@@ -44,45 +44,53 @@ class Madulator(pg.GraphicsView):
     def keyPressEvent(self, ev: QtGui.QKeyEvent) -> None:
         key = ev.key()
         if key == QtCore.Qt.Key.Key_Escape:
+            # Stop stream and terminate all
             self.stream.stop_stream()
             self.stream.close()
             self.pa.terminate()
             QtCore.QCoreApplication.quit()
         elif key == QtCore.Qt.Key.Key_R:
+            # Stop stream and generate random function
             self.stream.stop_stream()
             self.expression = self.generator.random_function()
+            # Pass a copy to samples and start stream
             expression = 'Expression()'
             expression = copy.deepcopy(self.expression)
             self.samples.set_expression(expression)
             self.stream.start_stream()
+            # Pass a copy to editor and display
             function = 'Expression()'
             function = copy.deepcopy(self.expression)
             self.editor.set_function(function)
-            path = self.editor.get_path()
+            selection = self.editor.get_selection()
             exp = self.editor.get_function()
-            self.editor_text.setText(exp.html_tree(path))
+            self.editor_text.setText(exp.html_tree(selection))
         elif key == QtCore.Qt.Key.Key_Space:
+            # Stop stream and get reset function
             self.stream.stop_stream()
-            path = self.editor.get_path()
+            selection = self.editor.get_selection()
             exp = self.editor.get_function()
             self.expression = exp
+            # Pass a copy to samples and display
             function = 'Expression()'
             function = copy.deepcopy(self.expression)
             self.samples.set_expression(function)
             self.stream.start_stream()
-            self.editor_text.setText(exp.html_tree(path))
+            self.editor_text.setText(exp.html_tree(selection))
         elif key == QtCore.Qt.Key.Key_V:
+            # Change expression into a Value entered by user
             val = self.get_number()
             if val != -1:
                 self.editor.create_value(val)
-            path = self.editor.get_path()
+            selection = self.editor.get_selection()
             expression = self.editor.get_function()
-            self.editor_text.setText(expression.html_tree(path))
+            self.editor_text.setText(expression.html_tree(selection))
         else:
+            # Change expression as dictated by user
             self.editor.new_key(ev.key())
-            path = self.editor.get_path()
+            selection = self.editor.get_selection()
             expression = self.editor.get_function()
-            self.editor_text.setText(expression.html_tree(path))
+            self.editor_text.setText(expression.html_tree(selection))
 
     def get_number(self) -> int:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
@@ -140,6 +148,6 @@ class Madulator(pg.GraphicsView):
         self.editor = Editor(function)
         self.editor_text = pg.LabelItem(name='Test', colspan=2)
         self.layout.addItem(self.editor_text)
-        path = self.editor.get_path()
+        selection = self.editor.get_selection()
         exp = self.editor.get_function()
-        self.editor_text.setText(exp.html_tree(path))
+        self.editor_text.setText(exp.html_tree(selection))
