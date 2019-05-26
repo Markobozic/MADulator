@@ -13,6 +13,10 @@ class Editor():
         self.path.append(self.root)
 
     def get_function(self) -> Expression:
+        count = 0
+        for n in self.path:
+            print(count, n)
+            count = count + 1
         return self.path[0]
 
     def get_path(self) -> Expression:
@@ -48,8 +52,6 @@ class Editor():
 
     # Take in user command to navigate and edit function
     def new_key(self, key: QtCore.Qt.Key) -> None:
-        self.path.append(self.root)
-
         if key == QtCore.Qt.Key.Key_Up:
             self.nav_up()
         elif key == QtCore.Qt.Key.Key_Left:
@@ -71,6 +73,8 @@ class Editor():
             parent, child_dir = self.parents.pop()
             self.path.pop()
             self.root = parent
+        else:
+            self.path.pop()
 
     # Navigate to left child
     def nav_left(self) -> None:
