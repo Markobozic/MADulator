@@ -2,6 +2,7 @@ from pyqtgraph.Qt import *
 import pyqtgraph as pg
 import pyaudio as pa
 import numpy as np
+import pickle
 from generator import Generator
 from samples import Samples
 from waveform import Waveform
@@ -49,6 +50,26 @@ class Madulator(pg.GraphicsView):
             self.stream.close()
             self.pa.terminate()
             QtCore.QCoreApplication.quit()
+        elif key == QtCore.Qt.Key.Key_S:
+            dialog = QtGui.QFileDialog()
+            path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
+            if path[0] != '':
+                with open(path[0], 'wb') as out_file:
+                    exp = self.samples.get_expression()
+                    pickle.dump(exp, out_file)
+        elif key == QtCore.Qt.Key.Key_L:
+            self.stream.stop_stream()
+            dialog = QtGui.QFileDialog()
+            dialog.setDefaultSuffix('.mad')
+            path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
+            if path[0] != '':
+                with open(path[0], 'rb') as in_file:
+                    exp = pickle.load(in_file)
+                    self.expression = exp
+                    self.samples.set_expression(exp)
+                    # self.editor = Editor(exp)
+                    # self.editor_text.setText(exp.html_tree([exp])
+            self.stream.start_stream()
         elif key == QtCore.Qt.Key.Key_R:
             # Stop stream and generate random function
             self.stream.stop_stream()
@@ -122,10 +143,12 @@ class Madulator(pg.GraphicsView):
         <p>Explore randomly generated sound functions.</p>
         <p><strong>Keys:</strong></p>
         <ul>
-        <li>[r] generate random function</li>
+        <li>[R] generate random function</li>
+        <li>[S] save function to file</li>
+        <li>[L] load function from file</li>
         <li>[up] [left] [right] navigate function</li>
-        <li>[v] replace expression with value (integer)</li>
-        <li>[t] replace expression with variable</li>
+        <li>[V] replace expression with value (integer)</li>
+        <li>[T] replace expression with variable</li>
         <li>[+] replace expression with addition</li>
         <li>[-] replace expression with subtraction</li>
         <li>[*] replace expression with multiplication</li>
@@ -136,8 +159,8 @@ class Madulator(pg.GraphicsView):
         <li>[^] replace expression with bitwise XOR</li>
         <li>[&lt;] replace expression with shift left</li>
         <li>[>] replace expression with shift right</li>
-        <li>[space] apply changes / restart playback</li>
-        <li>[esc] exit program</li>
+        <li>[SPACE] apply changes / restart playback</li>
+	    <li>[ESC] exit program</li>
         </ul>
         '''
         self.layout.addLabel(text, rowspan=3)
