@@ -37,11 +37,11 @@ class Madulator(pg.GraphicsView):
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
-        self.stream = self.pa.open(format = pa.get_format_from_width(1),
-            channels = 1,
-            rate = BITRATE,
-            output = True,
-            stream_callback=self.samples.pyaudio_callback)
+        self.stream = self.pa.open(format=pa.get_format_from_width(1),
+                                   channels=1,
+                                   rate=BITRATE,
+                                   output=True,
+                                   stream_callback=self.samples.pyaudio_callback)
 
     def keyPressEvent(self, ev: QtGui.QKeyEvent) -> None:
         key = ev.key()
@@ -123,13 +123,13 @@ class Madulator(pg.GraphicsView):
 
     def get_number(self) -> int:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
-            default_val, min_val, max_val, step_val)
+                                            default_val, min_val, max_val, step_val)
         if ok:
             return val
         return -1
 
     def setup_layout(self) -> None:
-        self.layout = pg.GraphicsLayout(border=(100,100,100))
+        self.layout = pg.GraphicsLayout(border=(100, 100, 100))
         self.setCentralItem(self.layout)
         self.show()
         self.setWindowTitle('MADulator')
@@ -163,6 +163,9 @@ class Madulator(pg.GraphicsView):
         <li>[&] replace expression with bitwise AND</li>
         <li>[|] replace expression with bitwise OR</li>
         <li>[^] replace expression with bitwise XOR</li>
+        <li>[,] decrease playback speed by 10%</li>
+        <li>[.] increase playback speed by 10%</li>
+        <li>[=] restore playback speed to normal</li>
         <li>[&lt;] replace expression with shift left</li>
         <li>[>] replace expression with shift right</li>
         <li>[SPACE] apply changes / restart playback</li>
