@@ -10,9 +10,6 @@ class SpectrogramWidget(pg.PlotItem):
     data_available = QtCore.pyqtSignal(np.ndarray)
 
     def __init__(self, bitrate: int):
-        self.max = 0
-        self.count = 0
-        np.seterr(divide='ignore')
         super(SpectrogramWidget, self).__init__()
         self.data_available.connect(self.update)
         self.bitrate = bitrate
