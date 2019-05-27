@@ -12,6 +12,8 @@
 * numpy
 * pickle (installed by default)
 
+To install the required modules, use the following command: `pip3 install -r requirements.txt`
+
 
 ## Code Additions
 
