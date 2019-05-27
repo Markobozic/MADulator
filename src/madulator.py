@@ -1,6 +1,7 @@
 import pyaudio as pa
 import numpy as np
 import pickle
+import os
 from generator import Generator
 from samples import Samples
 from waveform import Waveform
