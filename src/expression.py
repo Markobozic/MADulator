@@ -15,37 +15,35 @@ class Expression:
     def set_right(self, expression: 'Expression') -> None:
         self.right = expression
 
-    def html_tree(self, path: list) -> str:
-        depth = len(path)
-        if depth == 0:
-            return ''
-        selected = path[depth - 1]
-        return '<code>' + self.html_tree_node(path, selected) + '</code>'
+    def get_left(self) -> 'Expression':
+        return self.left
 
-    def html_tree_node(self, path: list, selected: 'Expression') -> str:
+    def get_right(self) -> 'Expression':
+        return self.right
+
+    def html_tree(self, selected: 'Expression') -> str:
+        return '<code>' + self.html_tree_node(selected) + '</code>'
+
+    def html_tree_node(self, selected: 'Expression') -> str:
         html = ''
         if self == selected:
             html = html + '<span style="color:white">'
-        html = html + '('
+        if not isinstance(self, Value) and not isinstance(self, Var):
+            html = html + '('
         if self == selected:
             html = html + '</span>'
         if self.left is not None:
-            if self.left in path:
-                html = html + '<span style="color:gray">' + self.left.html_tree_node(path, selected) + '</span>'
-            else:
-                html = html + str(self.left)
+            html = html + '<span style="color:gray">' + self.left.html_tree_node(selected) + '</span>'
         if self == selected:
             html = html + '<strong style="color:white"> ' + self.op() + ' </strong>'
         else:
             html = html + self.op()
         if self.right is not None:
-            if self.right in path:
-                html = html + '<span style="color:gray">' + self.right.html_tree_node(path, selected) + '</span>'
-            else:
-                html = html + str(self.left)
+            html = html + '<span style="color:gray">' + self.right.html_tree_node(selected) + '</span>'
         if self == selected:
             html = html + '<span style="color:white">'
-        html = html + ')'
+        if not isinstance(self, Value) and not isinstance(self, Var):
+            html = html + ')'
         if self == selected:
             html = html + '</span>'
         return html
@@ -71,7 +69,7 @@ class Value(Expression):
 
 
 class Add(Expression):
-    
+
     def __init__(self):
         pass
 
