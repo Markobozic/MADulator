@@ -166,7 +166,6 @@ class Madulator(pg.GraphicsView):
         <p>Explore randomly generated sound functions.</p>
         <p><strong>Keys:</strong></p>
         <ul>
-        <li>[R] generate random function</li>
         <li>[S] save function to file</li>
         <li>[L] load function from file</li>
         <li>[[] decreate random function index</li>
