@@ -1,5 +1,6 @@
 import pyaudio as pa
 import numpy as np
+import copy
 import pickle
 import os
 from generator import Generator
@@ -18,10 +19,12 @@ step_val: int = 1
 
 class Madulator(pg.GraphicsView):
 
+    function_index = 1
+    generator = Generator(function_index)
+    expression = generator.random_function()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.generator = Generator(1)
-        self.expression = self.generator.random_function()
         self.setup_layout()
         self.setup_waveform()
         self.setup_instructions()
@@ -29,11 +32,12 @@ class Madulator(pg.GraphicsView):
         self.setup_spectrograph()
         self.layout.nextRow()
         self.setup_editor()
+        self.setup_index()
         self.samples = Samples(self.waveform.data_available, self.spectrograph.data_available)
         self.copy_func_to_samples()
+        self.copy_func_to_editor_and_display()
         self.setup_pyaudio()
         self.stream.start_stream()
-        self.copy_func_to_editor_and_display()
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
@@ -75,15 +79,6 @@ class Madulator(pg.GraphicsView):
                     # Pass a copy of the expression to editor and display
                     self.copy_func_to_editor_and_display()
             self.stream.start_stream()
-        elif key == QtCore.Qt.Key.Key_R:
-            # Stop stream and generate random function
-            self.stream.stop_stream()
-            self.expression = self.generator.random_function()
-            # Pass a copy to samples and start stream
-            self.copy_func_to_samples()
-            self.stream.start_stream()
-            # Pass a copy of the expression to editor and display
-            self.copy_func_to_editor_and_display()
         elif key == QtCore.Qt.Key.Key_Space:
             # Stop stream and get reset function
             self.stream.stop_stream()
@@ -93,7 +88,25 @@ class Madulator(pg.GraphicsView):
             # Pass a copy to samples, start stream, and display
             self.copy_func_to_samples()
             self.stream.start_stream()
-            self.editor_text.setText(exp.html_tree(selection))
+            self.update_editor_info()
+        elif key == QtCore.Qt.Key.Key_BracketLeft:
+            if self.function_index > 1:
+                self.function_index = self.function_index - 1
+            self.update_function_from_index()
+            self.index_text.setText("Random function index: " + str(self.function_index))
+        elif key == QtCore.Qt.Key.Key_BracketRight:
+            self.function_index = self.function_index + 1
+            self.update_function_from_index()
+            self.index_text.setText("Random function index: " + str(self.function_index))
+        elif key == QtCore.Qt.Key.Key_I:
+            val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
+            if ok:
+                self.function_index = val
+                self.index_text.setText("Random function index: " + str(self.function_index))
+                self.generator = Generator(self.function_index)
+                self.expression = self.generator.random_function()
+                self.copy_func_to_samples()
+                self.copy_func_to_editor_and_display()
         elif key == QtCore.Qt.Key.Key_V:
             # Change expression into a Value entered by user
             val = self.get_number()
@@ -105,18 +118,22 @@ class Madulator(pg.GraphicsView):
             self.editor.new_key(ev.key())
             self.update_editor_info()
 
+    def update_function_from_index(self) -> None:
+        self.generator = Generator(self.function_index)
+        self.expression = self.generator.random_function()
+        self.copy_func_to_samples()
+        self.copy_func_to_editor_and_display()
+
     def update_editor_info(self) -> None:
         selection = self.editor.get_selection()
         expression = self.editor.get_function()
         self.editor_text.setText(expression.html_tree(selection))
 
     def copy_func_to_samples(self) -> None:
-        expression = 'Expression()'
         expression = copy.deepcopy(self.expression)
         self.samples.set_expression(expression)
 
     def copy_func_to_editor_and_display(self) -> None:
-        function = 'Expression()'
         function = copy.deepcopy(self.expression)
         self.editor.set_function(function)
         self.update_editor_info()
@@ -149,9 +166,11 @@ class Madulator(pg.GraphicsView):
         <p>Explore randomly generated sound functions.</p>
         <p><strong>Keys:</strong></p>
         <ul>
-        <li>[R] generate random function</li>
         <li>[S] save function to file</li>
         <li>[L] load function from file</li>
+        <li>[[] decreate random function index</li>
+        <li>[]] increase random function index</li>
+        <li>[I] goto function index</li>
         <li>[up] [left] [right] navigate function</li>
         <li>[V] replace expression with value (integer)</li>
         <li>[T] replace expression with variable</li>
@@ -169,12 +188,16 @@ class Madulator(pg.GraphicsView):
 	    <li>[ESC] exit program</li>
         </ul>
         '''
-        self.layout.addLabel(text, rowspan=3)
+        self.layout.addLabel(text, rowspan=2)
 
     def setup_editor(self) -> None:
-        function = 'Expression()'
         function = copy.deepcopy(self.expression)
         self.editor = Editor(function)
-        self.editor_text = pg.LabelItem(name='Test', colspan=2)
+        self.editor_text = pg.LabelItem(name='Editor')
         self.layout.addItem(self.editor_text)
         self.update_editor_info()
+
+    def setup_index(self) -> None:
+        self.index_text = pg.LabelItem(name='Index')
+        self.layout.addItem(self.index_text)
+        self.index_text.setText("Random function index: " + str(self.function_index))
