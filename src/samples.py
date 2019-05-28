@@ -22,7 +22,7 @@ class Samples:
             sound_samples.append(chr(value))
         data = ''.join(sound_samples)
         self.position += frame_count
-        if (self.waveform_signal and self.spectrogram_signal) is not None and len(self.samples) > 1024:
+        if (self.waveform_signal is not None and self.spectrogram_signal is not None) and len(self.samples) >= 1024:
             self.waveform_signal.emit(self.samples[-1024:])
             self.spectrogram_signal.emit(np.asarray(self.samples[-1024:]))
         return data, paContinue
