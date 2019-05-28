@@ -2,7 +2,7 @@
 
 # MADulator UI
 
-![Image of MADultor UI](https://imgur.com/VzYNu7F)
+![Image of MADultor UI](https://github.com/Markobozic/MADulator/blob/master/img/MadulatorUI.png)
 
 ## Development environment
 
