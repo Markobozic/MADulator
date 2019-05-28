@@ -24,7 +24,7 @@ class Samples:
         self.position += frame_count
         if (self.waveform_signal and self.spectrogram_signal) is not None and len(self.samples) > 1024:
             self.waveform_signal.emit(self.samples[-1024:])
-            self.spectrogram_signal.emit(np.frombuffer(array.array('B', self.samples[-1024:]).tobytes(), 'int8'))
+            self.spectrogram_signal.emit(np.asarray(self.samples[-1024:]))
         return data, paContinue
 
     def get_expression(self) -> Expression:
