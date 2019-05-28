@@ -27,6 +27,9 @@ class Samples:
             self.spectrogram_signal.emit(np.frombuffer(array.array('B', self.samples[-1024:]).tobytes(), 'int8'))
         return data, paContinue
 
+    def get_samples(self) -> list:
+        return self.samples
+
     def get_expression(self) -> Expression:
         return self.expression
 
