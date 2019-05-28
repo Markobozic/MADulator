@@ -1,6 +1,5 @@
 from expression import *
 from pyqtgraph.Qt import QtCore
-import pyqtgraph as pg
 
 class Editor():
 
