@@ -1,5 +1,8 @@
 import pyaudio as pa
 import numpy as np
+import wave
+import sounddevice as sd
+import soundfile as sf
 import copy
 import pickle
 import os
@@ -55,6 +58,27 @@ class Madulator(pg.GraphicsView):
             self.stream.close()
             self.pa.terminate()
             QtCore.QCoreApplication.quit()
+        elif key == QtCore.Qt.Key.Key_W:
+            # Save waveform
+            '''
+            max = 10
+            duration, ok = QtGui.QInputDialog.getInt(self, "Seconds of Audio:", "Seconds:",
+                1, 0, max, step_val)
+            if ok:
+            '''
+            dialog = QtGui.QFileDialog()
+            path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
+            if path[0] != '':
+                duration = 10
+                recording = sd.rec(int(duration * BITRATE), samplerate=BITRATE, channels=2)
+                sd.wait()
+                sf.write(path[0], recording, BITRATE)
+                '''wave_file = wave.open(path[0], 'wb')
+                wave_file.setnchannels(1)
+                wave_file.setsampwidth(self.pa.get_sample_size(pa.get_format_from_width(1)))
+                wave_file.setframerate(BITRATE)
+                wave_file.writeframes(bytes(self.samples.get_samples()))
+                wave_file.close()'''
         elif key == QtCore.Qt.Key.Key_S:
             # Save and download a function
             dialog = QtGui.QFileDialog()
@@ -166,6 +190,7 @@ class Madulator(pg.GraphicsView):
         <p>Explore randomly generated sound functions.</p>
         <p><strong>Keys:</strong></p>
         <ul>
+        <li>[W] save audio as .WAV file</li>
         <li>[S] save function to file</li>
         <li>[L] load function from file</li>
         <li>[[] decreate random function index</li>
