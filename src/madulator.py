@@ -80,7 +80,6 @@ class Madulator(pg.GraphicsView):
         elif key == QtCore.Qt.Key.Key_Space:
             # Stop stream and get reset function
             self.stream.stop_stream()
-            selection = self.editor.get_selection()
             exp = self.editor.get_function()
             self.expression = exp
             # Pass a copy to samples, start stream, and display
