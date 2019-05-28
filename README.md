@@ -1,5 +1,9 @@
 # Functional Music Generation
 
+## MADulator UI
+
+![Image of MADultor UI](https://github.com/Markobozic/MADulator/blob/master/img/MadulatorUI.png)
+
 ## Development environment
 
 ### Linux packages
