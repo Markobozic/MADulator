@@ -1,8 +1,7 @@
 import pyaudio as pa
 import numpy as np
 import wave
-import sounddevice as sd
-import soundfile as sf
+import time
 import copy
 import pickle
 import os
@@ -54,93 +53,129 @@ class Madulator(pg.GraphicsView):
         key = ev.key()
         if key == QtCore.Qt.Key.Key_Escape:
             # Stop stream and terminate all
-            self.stream.stop_stream()
-            self.stream.close()
-            self.pa.terminate()
-            QtCore.QCoreApplication.quit()
+            self.escape_key_event()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
-            '''
-            max = 10
-            duration, ok = QtGui.QInputDialog.getInt(self, "Seconds of Audio:", "Seconds:",
-                1, 0, max, step_val)
-            if ok:
-            '''
-            dialog = QtGui.QFileDialog()
-            path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
-            if path[0] != '':
-                duration = 10
-                recording = sd.rec(int(duration * BITRATE), samplerate=BITRATE, channels=2)
-                sd.wait()
-                sf.write(path[0], recording, BITRATE)
-                '''wave_file = wave.open(path[0], 'wb')
-                wave_file.setnchannels(1)
-                wave_file.setsampwidth(self.pa.get_sample_size(pa.get_format_from_width(1)))
-                wave_file.setframerate(BITRATE)
-                wave_file.writeframes(bytes(self.samples.get_samples()))
-                wave_file.close()'''
+            self.w_key_event()
         elif key == QtCore.Qt.Key.Key_S:
             # Save and download a function
-            dialog = QtGui.QFileDialog()
-            path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
-            if path[0] != '':
-                with open(path[0], 'wb') as out_file:
-                    exp = self.samples.get_expression()
-                    pickle.dump(exp, out_file)
+            self.s_key_event()
         elif key == QtCore.Qt.Key.Key_L:
             # Load a function from computer
-            self.stream.stop_stream()
-            dialog = QtGui.QFileDialog()
-            dialog.setDefaultSuffix('.mad')
-            path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
-            if path[0] != '':
-                with open(path[0], 'rb') as in_file:
-                    exp = pickle.load(in_file)
-                    self.expression = exp
-                    # Pass a copy to samples
-                    self.copy_func_to_samples()
-                    self.editor = Editor(exp)
-                    # Pass a copy of the expression to editor and display
-                    self.copy_func_to_editor_and_display()
-            self.stream.start_stream()
+            self.l_key_event()
         elif key == QtCore.Qt.Key.Key_Space:
-            # Stop stream and get reset function
-            self.stream.stop_stream()
-            selection = self.editor.get_selection()
-            exp = self.editor.get_function()
-            self.expression = exp
-            # Pass a copy to samples, start stream, and display
-            self.copy_func_to_samples()
-            self.stream.start_stream()
-            self.update_editor_info()
+            # Stop stream and get reset function to play from beginning
+            self.space_key_event()
         elif key == QtCore.Qt.Key.Key_BracketLeft:
-            if self.function_index > 1:
-                self.function_index = self.function_index - 1
-            self.update_function_from_index()
-            self.index_text.setText("Random function index: " + str(self.function_index))
+            # Index through older randomized functions
+            self.bracket_left_key_event()
         elif key == QtCore.Qt.Key.Key_BracketRight:
-            self.function_index = self.function_index + 1
-            self.update_function_from_index()
-            self.index_text.setText("Random function index: " + str(self.function_index))
+            # Index through newer randomized functions
+            self.bracket_right_key_event()
         elif key == QtCore.Qt.Key.Key_I:
-            val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
-            if ok:
-                self.function_index = val
-                self.index_text.setText("Random function index: " + str(self.function_index))
-                self.generator = Generator(self.function_index)
-                self.expression = self.generator.random_function()
-                self.copy_func_to_samples()
-                self.copy_func_to_editor_and_display()
+            # Go to a certain function index
+            self.i_key_event()
         elif key == QtCore.Qt.Key.Key_V:
             # Change expression into a Value entered by user
-            val = self.get_number()
-            if val != -1:
-                self.editor.create_value(val)
-            self.update_editor_info()
+            self.v_key_event()
         else:
             # Change expression as dictated by user
             self.editor.new_key(ev.key())
             self.update_editor_info()
+
+    # Key press events
+    def escape_key_event(self) -> None:
+        # Stop stream and terminate all
+        self.stream.stop_stream()
+        self.stream.close()
+        self.pa.terminate()
+        QtCore.QCoreApplication.quit()
+
+    def w_key_event(self) -> None:
+        # Save waveform
+        duration, ok = QtGui.QInputDialog.getInt(self, "Seconds of Audio:", "Seconds:",
+            1, 0, max_val, step_val)
+        if ok:
+            dialog = QtGui.QFileDialog()
+            path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
+            if path[0] != '':
+                wave_file = wave.open(path[0], 'wb')
+                wave_file.setnchannels(1)
+                wave_file.setsampwidth(self.pa.get_sample_size(pa.get_format_from_width(1)))
+                wave_file.setframerate(BITRATE)
+                # Play stream from beginning
+                self.space_key_event()
+                beginning = time.clock()
+                end = beginning + duration
+                while time.clock() <= end:
+                    if time.clock() >= end:
+                        wave_file.writeframes(bytes(self.samples.get_samples()))
+                        wave_file.close()
+
+    def s_key_event(self) -> None:
+        # Save and download a function
+        dialog = QtGui.QFileDialog()
+        path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
+        if path[0] != '':
+            with open(path[0], 'wb') as out_file:
+                exp = self.samples.get_expression()
+                pickle.dump(exp, out_file)
+
+    def l_key_event(self) -> None:
+        # Load a function from computer
+        self.stream.stop_stream()
+        dialog = QtGui.QFileDialog()
+        dialog.setDefaultSuffix('.mad')
+        path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
+        if path[0] != '':
+            with open(path[0], 'rb') as in_file:
+                exp = pickle.load(in_file)
+                self.expression = exp
+                # Pass a copy to samples
+                self.copy_func_to_samples()
+                self.editor = Editor(exp)
+                # Pass a copy of the expression to editor and display
+                self.copy_func_to_editor_and_display()
+        self.stream.start_stream()
+
+    def space_key_event(self) -> None:
+        # Stop stream and get reset function
+        self.stream.stop_stream()
+        selection = self.editor.get_selection()
+        exp = self.editor.get_function()
+        self.expression = exp
+        # Pass a copy to samples, start stream, and display
+        self.copy_func_to_samples()
+        self.stream.start_stream()
+        self.update_editor_info()
+
+    def bracket_left_key_event(self) -> None:
+        if self.function_index > 1:
+            self.function_index = self.function_index - 1
+        self.update_function_from_index()
+        self.index_text.setText("Random function index: " + str(self.function_index))
+
+    def bracket_right_key_event(self) -> None:
+        self.function_index = self.function_index + 1
+        self.update_function_from_index()
+        self.index_text.setText("Random function index: " + str(self.function_index))
+
+    def i_key_event(self) -> None:
+        val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
+        if ok:
+            self.function_index = val
+            self.index_text.setText("Random function index: " + str(self.function_index))
+            self.generator = Generator(self.function_index)
+            self.expression = self.generator.random_function()
+            self.copy_func_to_samples()
+            self.copy_func_to_editor_and_display()
+
+    def v_key_event(self) -> None:
+        # Change expression into a Value entered by user
+        val = self.get_number()
+        if val != -1:
+            self.editor.create_value(val)
+        self.update_editor_info()
 
     def update_function_from_index(self) -> None:
         self.generator = Generator(self.function_index)
