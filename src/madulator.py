@@ -8,7 +8,7 @@ from editor import Editor
 import copy
 from spectrogram import *
 
-BITRATE = 11025
+BITRATE: int = 11025
 DEFAULT_VAL: int = 50
 MIN_VAL: int = 1
 MAX_VAL: int = 2147483647

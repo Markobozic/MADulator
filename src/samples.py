@@ -36,11 +36,11 @@ class Samples:
         return self.expression
 
     def set_expression(self, expression: Expression) -> None:
-        self.lock.acquire()
         self.expression = expression
+        self.lock.acquire()
         self.reset()
 
     def reset(self) -> None:
         self.position = 0
-        self.lock.release()
         self.samples.clear()
+        self.lock.release()
