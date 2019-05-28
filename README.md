@@ -1,6 +1,6 @@
 # Functional Music Generation
 
-# MADulator UI
+## MADulator UI
 
 ![Image of MADultor UI](https://github.com/Markobozic/MADulator/blob/master/img/MadulatorUI.png)
 
