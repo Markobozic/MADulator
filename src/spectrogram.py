@@ -5,6 +5,8 @@ np.seterr(divide='ignore')
 
 CHUNK = 1024
 SPECTROGRAM_WIDTH = 256
+MULTIPLIER = 0
+
 
 class SpectrogramWidget(pg.PlotItem):
     data_available = QtCore.pyqtSignal(np.ndarray)
