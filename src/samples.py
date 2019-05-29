@@ -27,6 +27,12 @@ class Samples:
             self.spectrogram_signal.emit(np.frombuffer(array.array('B', self.samples[-1024:]).tobytes(), 'int8'))
         return data, paContinue
 
+    def generate_samples(self, num_samples: int) -> None:
+        sound_samples = []
+        for i in range(num_samples):
+            value = self.expression.eval(i) % 256
+            self.samples.append(value)
+
     def get_samples(self) -> list:
         return self.samples
 

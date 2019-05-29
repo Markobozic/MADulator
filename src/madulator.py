@@ -103,14 +103,13 @@ class Madulator(pg.GraphicsView):
                 wave_file.setnchannels(1)
                 wave_file.setsampwidth(self.pa.get_sample_size(pa.get_format_from_width(1)))
                 wave_file.setframerate(BITRATE)
-                # Play stream from beginning
-                self.space_key_event()
-                beginning = time.clock()
-                end = beginning + duration
-                while time.clock() <= end:
-                    if time.clock() >= end:
-                        wave_file.writeframes(bytes(self.samples.get_samples()))
-                        wave_file.close()
+                s = Samples()
+                exp = copy.deepcopy(self.expression)
+                s.set_expression(exp)
+                s.generate_samples(duration * BITRATE)
+                samples = s.get_samples()
+                wave_file.writeframes(bytes(samples))
+                wave_file.close()
 
     def s_key_event(self) -> None:
         # Save and download a function
