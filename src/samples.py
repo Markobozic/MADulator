@@ -31,17 +31,19 @@ class Samples:
 
     def generate_samples_and_write(self, filename: str, duration: int, rate: int) -> None:
         num_samples = duration * rate
+        sample = []
         wave_file = wave.open(filename, 'wb')
-        wave_file.setnchannels(2)
-        wave_file.setsampwidth(2)
+        wave_file.setnchannels(1)
+        wave_file.setsampwidth(1)
         wave_file.setframerate(rate)
         for i in range(num_samples):
             # Need to correct the math
-            one = self.expression.eval(i) % 32767
-            two = self.expression.eval(i) % 32767
-            sample = struct.pack('<hh', one, two)
-            wave_file.writeframesraw(sample)
-        wave_file.writeframes(b'')
+            one = self.expression.eval(i) % 256
+            '''two = self.expression.eval(i) % 32767
+            sample = struct.pack('<hh', one, two)'''
+            #wave_file.writeframesraw(sample)
+            sample.append(one)
+        wave_file.writeframes(bytes(sample))
         wave_file.close()
 
     def get_samples(self) -> list:
