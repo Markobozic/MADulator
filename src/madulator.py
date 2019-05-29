@@ -1,7 +1,5 @@
 import pyaudio as pa
 import numpy as np
-import wave
-import time
 import copy
 import pickle
 import os
@@ -13,6 +11,7 @@ import copy
 from spectrogram import *
 
 BITRATE = 11025
+WAV_BITRATE = 44100
 default_val: int = 50
 min_val: int = 1
 max_val: int = 2147483647
@@ -99,17 +98,10 @@ class Madulator(pg.GraphicsView):
             dialog = QtGui.QFileDialog()
             path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
             if path[0] != '':
-                wave_file = wave.open(path[0], 'wb')
-                wave_file.setnchannels(1)
-                wave_file.setsampwidth(self.pa.get_sample_size(pa.get_format_from_width(1)))
-                wave_file.setframerate(BITRATE)
                 s = Samples()
                 exp = copy.deepcopy(self.expression)
                 s.set_expression(exp)
-                s.generate_samples(duration * BITRATE)
-                samples = s.get_samples()
-                wave_file.writeframes(bytes(samples))
-                wave_file.close()
+                s.generate_samples_and_write(path[0], duration, WAV_BITRATE)
 
     def s_key_event(self) -> None:
         # Save and download a function
