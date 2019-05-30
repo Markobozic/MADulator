@@ -228,7 +228,7 @@ class Madulator(pg.GraphicsView):
         <li>[W] save audio as .WAV file</li>
         <li>[S] save function to file</li>
         <li>[L] load function from file</li>
-        <li>[[] decreate random function index</li>
+        <li>[[] decrease random function index</li>
         <li>[]] increase random function index</li>
         <li>[I] goto function index</li>
         <li>[up] [left] [right] navigate function</li>
