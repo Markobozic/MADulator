@@ -11,7 +11,6 @@ import copy
 from spectrogram import *
 
 BITRATE = 11025
-WAV_BITRATE = 44100
 default_val: int = 50
 min_val: int = 1
 max_val: int = 2147483647
@@ -42,7 +41,8 @@ class Madulator(pg.GraphicsView):
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
-        self.stream = self.pa.open(format = pa.get_format_from_width(1),
+        #self.stream = self.pa.open(format = pa.get_format_from_width(1),
+        self.stream = self.pa.open(format = pa.paUInt8,
             channels = 1,
             rate = BITRATE,
             output = True,
@@ -101,7 +101,7 @@ class Madulator(pg.GraphicsView):
                 s = Samples()
                 exp = copy.deepcopy(self.expression)
                 s.set_expression(exp)
-                s.generate_samples_and_write(path[0], duration, BITRATE)
+                s.generate_samples_and_write(path[0], duration)
 
     def s_key_event(self) -> None:
         # Save and download a function
