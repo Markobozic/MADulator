@@ -108,7 +108,6 @@ class Madulator(pg.GraphicsView):
                 samples = Samples()
                 expression = copy.deepcopy(self.expression)
                 samples.set_expression(expression)
-                #s.gen_write_8(path[0], duration)
                 samples.gen_write_16(path[0], duration)
 
     def save_func(self) -> None:

@@ -38,19 +38,6 @@ class Samples:
             self.lock.release()
         return data, paContinue
 
-    def gen_write_8(self, filename: str, duration: int) -> None:
-        num_samples = duration * BITRATE
-        wave_file = wave.open(filename, 'wb')
-        wave_file.setnchannels(1)
-        wave_file.setsampwidth(1)
-        wave_file.setframerate(BITRATE)
-        for i in range(num_samples):
-            one = self.expression.eval(i) % 256
-            sample = struct.pack('B', one)
-            wave_file.writeframesraw(sample)
-        wave_file.writeframes(b'')
-        wave_file.close()
-
     def gen_write_16(self, filename: str, duration: int) -> None:
         ratio = WAV_BITRATE/BITRATE
         num_samples = duration * WAV_BITRATE
