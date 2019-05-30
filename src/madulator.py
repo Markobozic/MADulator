@@ -55,28 +55,28 @@ class Madulator(pg.GraphicsView):
             self.escape_key_event()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
-            self.w_key_event()
+            self.save_wav()
         elif key == QtCore.Qt.Key.Key_S:
             # Save and download a function
-            self.s_key_event()
+            self.save_func()
         elif key == QtCore.Qt.Key.Key_L:
             # Load a function from computer
-            self.l_key_event()
+            self.load_func()
         elif key == QtCore.Qt.Key.Key_Space:
             # Stop stream and get reset function to play from beginning
-            self.space_key_event()
+            self.restart_stream()
         elif key == QtCore.Qt.Key.Key_BracketLeft:
             # Index through older randomized functions
-            self.bracket_left_key_event()
+            self.older_index()
         elif key == QtCore.Qt.Key.Key_BracketRight:
             # Index through newer randomized functions
-            self.bracket_right_key_event()
+            self.newer_index()
         elif key == QtCore.Qt.Key.Key_I:
             # Go to a certain function index
-            self.i_key_event()
+            self.get_index()
         elif key == QtCore.Qt.Key.Key_V:
             # Change expression into a Value entered by user
-            self.v_key_event()
+            self.change_to_value()
         else:
             # Change expression as dictated by user
             self.editor.new_key(ev.key())
@@ -90,7 +90,7 @@ class Madulator(pg.GraphicsView):
         self.pa.terminate()
         QtCore.QCoreApplication.quit()
 
-    def w_key_event(self) -> None:
+    def save_wav(self) -> None:
         # Save waveform
         duration, ok = QtGui.QInputDialog.getInt(self, "Seconds of Audio:", "Seconds:",
             1, 0, max_val, step_val)
@@ -104,7 +104,7 @@ class Madulator(pg.GraphicsView):
                 #s.gen_write_8(path[0], duration)
                 s.gen_write_16(path[0], duration)
 
-    def s_key_event(self) -> None:
+    def save_func(self) -> None:
         # Save and download a function
         dialog = QtGui.QFileDialog()
         path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
@@ -113,7 +113,7 @@ class Madulator(pg.GraphicsView):
                 exp = self.samples.get_expression()
                 pickle.dump(exp, out_file)
 
-    def l_key_event(self) -> None:
+    def load_func(self) -> None:
         # Load a function from computer
         self.stream.stop_stream()
         dialog = QtGui.QFileDialog()
@@ -130,7 +130,7 @@ class Madulator(pg.GraphicsView):
                 self.copy_func_to_editor_and_display()
         self.stream.start_stream()
 
-    def space_key_event(self) -> None:
+    def restart_stream(self) -> None:
         # Stop stream and get reset function
         self.stream.stop_stream()
         selection = self.editor.get_selection()
@@ -141,18 +141,18 @@ class Madulator(pg.GraphicsView):
         self.stream.start_stream()
         self.update_editor_info()
 
-    def bracket_left_key_event(self) -> None:
+    def older_index(self) -> None:
         if self.function_index > 1:
             self.function_index = self.function_index - 1
         self.update_function_from_index()
         self.index_text.setText("Random function index: " + str(self.function_index))
 
-    def bracket_right_key_event(self) -> None:
+    def newer_index(self) -> None:
         self.function_index = self.function_index + 1
         self.update_function_from_index()
         self.index_text.setText("Random function index: " + str(self.function_index))
 
-    def i_key_event(self) -> None:
+    def get_index(self) -> None:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
         if ok:
             self.function_index = val
@@ -162,7 +162,7 @@ class Madulator(pg.GraphicsView):
             self.copy_func_to_samples()
             self.copy_func_to_editor_and_display()
 
-    def v_key_event(self) -> None:
+    def change_to_value(self) -> None:
         # Change expression into a Value entered by user
         val = self.get_number()
         if val != -1:
