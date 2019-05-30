@@ -8,7 +8,7 @@ import struct
 import math
 
 BITRATE = 11025
-WAV_BITRATE = 11025
+WAV_BITRATE = 44100
 
 class Samples:
 
@@ -33,24 +33,34 @@ class Samples:
             self.spectrogram_signal.emit(np.frombuffer(array.array('B', self.samples[-1024:]).tobytes(), 'int8'))
         return data, paContinue
 
-    def generate_samples_and_write(self, filename: str, duration: int) -> None:
+    def gen_write_8(self, filename: str, duration: int) -> None:
+        num_samples = duration * BITRATE
+        print(num_samples)
+        sample = []
+        wave_file = wave.open(filename, 'wb')
+        wave_file.setnchannels(1)
+        wave_file.setsampwidth(1)
+        wave_file.setframerate(BITRATE)
+        for i in range(num_samples):
+            one = self.expression.eval(i) % 256
+            sample = struct.pack('B', one)
+            wave_file.writeframesraw(sample)
+        wave_file.writeframes(b'')
+        wave_file.close()
+
+    def gen_write_16(self, filename: str, duration: int) -> None:
         ratio = WAV_BITRATE/BITRATE
         num_samples = duration * WAV_BITRATE
         print(num_samples)
         sample = []
         wave_file = wave.open(filename, 'wb')
         wave_file.setnchannels(1)
-        wave_file.setsampwidth(1)
+        wave_file.setsampwidth(2)
         wave_file.setframerate(WAV_BITRATE)
         for i in range(num_samples):
-            # Need to correct the math
             one = self.expression.eval(int(i/ratio)) % 256
-            '''one = (one * 256) - 2**15
-            two = self.expression.eval(i) % 32767
-            sample = struct.pack('<hh', one, two)'''
-            #wave_file.writeframesraw(sample)
-            sample = struct.pack('B', one)
-            #sample = (one).to_bytes(2, byteorder='big')
+            one = (one * 256) - 2**15
+            sample = struct.pack('<h', one)
             wave_file.writeframesraw(sample)
         wave_file.writeframes(b'')
         wave_file.close()
