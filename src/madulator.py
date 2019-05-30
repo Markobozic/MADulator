@@ -1,6 +1,4 @@
 import pyaudio as pa
-import numpy as np
-import copy
 import pickle
 import os
 from generator import Generator
@@ -10,11 +8,11 @@ from editor import Editor
 import copy
 from spectrogram import *
 
-BITRATE = 11025
-default_val: int = 50
-min_val: int = 1
-max_val: int = 2147483647
-step_val: int = 1
+BITRATE: int = 11025
+DEFAULT_VAL: int = 50
+MIN_VAL: int = 1
+MAX_VAL: int = 2147483647
+STEP_VAL: int = 1
 
 
 class Madulator(pg.GraphicsView):
@@ -191,7 +189,7 @@ class Madulator(pg.GraphicsView):
 
     def get_number(self) -> int:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Value:", "Value:",
-            default_val, min_val, max_val, step_val)
+            DEFAULT_VAL, MIN_VAL, MAX_VAL, STEP_VAL)
         if ok:
             return val
         return -1

@@ -1,9 +1,9 @@
 from expression import *
 import random
 
-default_number_of_nodes: int = 20
-default_variable_ratio: float = .5
-maximum_value: int = 8 # calculated as 2^maximum_value
+DEFAULT_NUMBER_OF_NODES: int = 20
+DEFAULT_VARIABLE_RATIO: float = .5
+MAXIMUM_VALUE: int = 8 # calculated as 2^MAXIMUM_VALUE
 
 
 class Generator():
@@ -15,7 +15,7 @@ class Generator():
     def __init__(self, seed: int):
         random.seed(seed)
 
-    def random_function(self, nodes: int = default_number_of_nodes, variable_ratio: float = default_variable_ratio) -> Expression:
+    def random_function(self, nodes: int = DEFAULT_NUMBER_OF_NODES, variable_ratio: float = DEFAULT_VARIABLE_RATIO) -> Expression:
         leaves = []
 
         # Generate a random plan for 'var' and 'value' leaves
@@ -45,7 +45,7 @@ class Generator():
                 node = Var()
             else:
                 node = Value()
-                node.set_number(2**random.randint(0, maximum_value))
+                node.set_number(2**random.randint(0, MAXIMUM_VALUE))
             return node
 
         # If this is a branch, make it a math operator
