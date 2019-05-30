@@ -52,7 +52,7 @@ class Madulator(pg.GraphicsView):
         key = ev.key()
         if key == QtCore.Qt.Key.Key_Escape:
             # Stop stream and terminate all
-            self.escape_key_event()
+            self.terminate_program()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
             self.save_wav()
@@ -83,7 +83,7 @@ class Madulator(pg.GraphicsView):
             self.update_editor_info()
 
     # Key press events
-    def escape_key_event(self) -> None:
+    def terminate_program(self) -> None:
         # Stop stream and terminate all
         self.stream.stop_stream()
         self.stream.close()
