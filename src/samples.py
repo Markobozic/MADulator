@@ -53,9 +53,6 @@ class Samples:
         wave_file.writeframes(b'')
         wave_file.close()
 
-    def get_samples(self) -> list:
-        return self.samples
-
     def get_expression(self) -> Expression:
         return self.expression
 
