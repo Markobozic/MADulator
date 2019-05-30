@@ -101,7 +101,8 @@ class Madulator(pg.GraphicsView):
                 s = Samples()
                 exp = copy.deepcopy(self.expression)
                 s.set_expression(exp)
-                s.generate_samples_and_write(path[0], duration)
+                #s.gen_write_8(path[0], duration)
+                s.gen_write_16(path[0], duration)
 
     def s_key_event(self) -> None:
         # Save and download a function
