@@ -39,7 +39,6 @@ class Madulator(pg.GraphicsView):
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
-        #self.stream = self.pa.open(format = pa.get_format_from_width(1),
         self.stream = self.pa.open(format = pa.paUInt8,
             channels = 1,
             rate = BITRATE,
@@ -106,11 +105,11 @@ class Madulator(pg.GraphicsView):
             dialog = QtGui.QFileDialog()
             path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
             if path[0] != '':
-                s = Samples()
-                exp = copy.deepcopy(self.expression)
-                s.set_expression(exp)
+                samples = Samples()
+                expression = copy.deepcopy(self.expression)
+                samples.set_expression(expression)
                 #s.gen_write_8(path[0], duration)
-                s.gen_write_16(path[0], duration)
+                samples.gen_write_16(path[0], duration)
 
     def save_func(self) -> None:
         # Save and download a function
@@ -143,9 +142,8 @@ class Madulator(pg.GraphicsView):
         # Stop stream and get reset function
         if self.stream.is_active():
             self.stream.stop_stream()
-        selection = self.editor.get_selection()
-        exp = self.editor.get_function()
-        self.expression = exp
+        expression = self.editor.get_function()
+        self.expression = expression
         # Pass a copy to samples, start stream, and display
         self.copy_func_to_samples()
         self.stream.start_stream()

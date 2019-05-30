@@ -5,7 +5,6 @@ import threading
 import numpy as np
 import wave
 import struct
-import math
 
 BITRATE: int = 11025
 WAV_BITRATE: int = 44100
@@ -41,8 +40,6 @@ class Samples:
 
     def gen_write_8(self, filename: str, duration: int) -> None:
         num_samples = duration * BITRATE
-        print(num_samples)
-        sample = []
         wave_file = wave.open(filename, 'wb')
         wave_file.setnchannels(1)
         wave_file.setsampwidth(1)
@@ -57,8 +54,6 @@ class Samples:
     def gen_write_16(self, filename: str, duration: int) -> None:
         ratio = WAV_BITRATE/BITRATE
         num_samples = duration * WAV_BITRATE
-        print(num_samples)
-        sample = []
         wave_file = wave.open(filename, 'wb')
         wave_file.setnchannels(1)
         wave_file.setsampwidth(2)
