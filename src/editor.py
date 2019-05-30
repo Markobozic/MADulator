@@ -51,21 +51,26 @@ class Editor():
         self.connect_nodes(new_node)
 
     # Take in user command to navigate and edit function
-    def new_key(self, key: QtCore.Qt.Key) -> None:
+    def new_key(self, key: QtCore.Qt.Key) -> bool:
         if key == QtCore.Qt.Key.Key_Up:
             self.nav_up()
+            return False
         elif key == QtCore.Qt.Key.Key_Left:
             self.nav_left()
+            return False
         elif key == QtCore.Qt.Key.Key_Right:
             self.nav_right()
+            return False
         elif (key == QtCore.Qt.Key.Key_Plus or key == QtCore.Qt.Key.Key_Minus
             or key == QtCore.Qt.Key.Key_Asterisk or key == QtCore.Qt.Key.Key_Slash
             or key == QtCore.Qt.Key.Key_Percent or key == QtCore.Qt.Key.Key_Less
             or key == QtCore.Qt.Key.Key_Greater or key == QtCore.Qt.Key.Key_Ampersand
             or key == QtCore.Qt.Key.Key_Bar or key == QtCore.Qt.Key.Key_AsciiCircum):
             self.replace('o', key)
+            return True
         elif key == QtCore.Qt.Key.Key_T:
             self.replace('v', key)
+            return True
 
     # Navigate back up to parent root
     def nav_up(self) -> None:

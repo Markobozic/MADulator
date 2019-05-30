@@ -51,6 +51,9 @@ class Madulator(pg.GraphicsView):
         if key == QtCore.Qt.Key.Key_Escape:
             # Stop stream and terminate all
             self.terminate_program()
+        elif key == QtCore.Qt.Key.Key_Space:
+            # Pause/Resume audio stream
+            self.pause_resume()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
             self.save_wav()
@@ -60,9 +63,6 @@ class Madulator(pg.GraphicsView):
         elif key == QtCore.Qt.Key.Key_L:
             # Load a function from computer
             self.load_func()
-        elif key == QtCore.Qt.Key.Key_Space:
-            # Stop stream and get reset function to play from beginning
-            self.restart_stream()
         elif key == QtCore.Qt.Key.Key_BracketLeft:
             # Index through older randomized functions
             self.older_index()
@@ -77,16 +77,26 @@ class Madulator(pg.GraphicsView):
             self.change_to_value()
         else:
             # Change expression as dictated by user
-            self.editor.new_key(ev.key())
-            self.update_editor_info()
+            is_editor_key = self.editor.new_key(ev.key())
+            if is_editor_key:
+                self.restart_stream()
+            else:
+                self.update_editor_info()
 
     # Key press events
     def terminate_program(self) -> None:
         # Stop stream and terminate all
-        self.stream.stop_stream()
+        if self.stream.is_active():
+            self.stream.stop_stream()
         self.stream.close()
         self.pa.terminate()
         QtCore.QCoreApplication.quit()
+
+    def pause_resume(self) -> None:
+        if self.stream.is_active():
+            self.stream.stop_stream()
+        else:
+            self.stream.start_stream()
 
     def save_wav(self) -> None:
         # Save waveform
@@ -113,7 +123,8 @@ class Madulator(pg.GraphicsView):
 
     def load_func(self) -> None:
         # Load a function from computer
-        self.stream.stop_stream()
+        if self.stream.is_active():
+            self.stream.stop_stream()
         dialog = QtGui.QFileDialog()
         dialog.setDefaultSuffix('.mad')
         path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
@@ -130,7 +141,8 @@ class Madulator(pg.GraphicsView):
 
     def restart_stream(self) -> None:
         # Stop stream and get reset function
-        self.stream.stop_stream()
+        if self.stream.is_active():
+            self.stream.stop_stream()
         selection = self.editor.get_selection()
         exp = self.editor.get_function()
         self.expression = exp
@@ -234,7 +246,7 @@ class Madulator(pg.GraphicsView):
         <li>[^] replace expression with bitwise XOR</li>
         <li>[&lt;] replace expression with shift left</li>
         <li>[>] replace expression with shift right</li>
-        <li>[SPACE] apply changes / restart playback</li>
+        <li>[SPACE] pause or resume playback</li>
 	    <li>[ESC] exit program</li>
         </ul>
         '''
