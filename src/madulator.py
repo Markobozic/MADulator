@@ -5,6 +5,7 @@ from generator import Generator
 from samples import Samples
 from waveform import Waveform
 from editor import Editor
+from eventHandler import EventHandler
 import copy
 from spectrogram import *
 
@@ -36,6 +37,7 @@ class Madulator(pg.GraphicsView):
         self.copy_func_to_editor_and_display()
         self.setup_pyaudio()
         self.stream.start_stream()
+        self.event_handler = EventHandler(self.stream)
 
     def setup_pyaudio(self) -> None:
         self.pa = pa.PyAudio()
