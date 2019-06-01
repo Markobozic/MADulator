@@ -174,6 +174,7 @@ class Madulator(pg.GraphicsView):
         val = self.get_number()
         if val != -1:
             self.editor.create_value(val)
+            self.restart_stream()
         self.update_editor_info()
 
     def update_function_from_index(self) -> None:
