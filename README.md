@@ -1,4 +1,14 @@
-# Functional Music Generation
+# MADulator
+
+![Image of MADultor UI](https://github.com/Markobozic/MADulator/blob/master/img/MadulatorUI.png)
+
+Developed by Marko, Angelic and Daniel (MAD), this program allows one to explore functionally generated sounds. Each function is built from a tree of mathematical and bitwise expression nodes. Audio is generated at 8-bit 11,025 hz using a pyaudio stream.
+
+* Index of 2^32 randomly generated functions to explore
+* waveform and spectrogram visualization
+* Real time function editor with 10 binary operators, constants and variables
+* Save functions to and load from MAD file format
+* Save audio to WAV file (scaled to 16-bit 44.1khz)
 
 ## Development environment
 
@@ -11,7 +21,9 @@
 * pyqtgraph
 * numpy
 * pickle (installed by default)
+* wave (installed by default)
 
+To install the required modules, use the following command: `pip3 install -r requirements.txt`
 
 ## Code Additions
 

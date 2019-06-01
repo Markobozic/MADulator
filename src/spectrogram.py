@@ -8,11 +8,11 @@ SPECTROGRAM_WIDTH = 256
 MULTIPLIER = 0
 
 
+
 class SpectrogramWidget(pg.PlotItem):
     data_available = QtCore.pyqtSignal(np.ndarray)
 
     def __init__(self, bitrate: int):
-        np.seterr(divide='ignore')
         super(SpectrogramWidget, self).__init__()
         self.data_available.connect(self.update)
         self.bitrate = bitrate
@@ -20,13 +20,13 @@ class SpectrogramWidget(pg.PlotItem):
         self.addItem(self.img)
         self.img_array = np.zeros((SPECTROGRAM_WIDTH, CHUNK//2+1))
 
-        position = np.array([0., 1., 0.5, 0.25, 0.75])
-        colors = np.array([[0, 255, 255, 255], [255, 255, 0, 255], [0, 0, 0, 255], (0, 0, 255, 255), (255, 0, 0, 255)], dtype=np.ubyte)
+        position = [0.0, 0.25, 0.5, 0.75, 1.0]
+        colors = [[0, 0, 0, 255], [0, 0, 256, 255], [256, 0, 0, 255], [242, 125, 0, 255], [253, 207, 88, 255]]
         bi_polar_color_map = pg.ColorMap(position, colors)
         lookup_table = bi_polar_color_map.getLookupTable(0.0, 1.0, 256)
 
         self.img.setLookupTable(lookup_table)
-        self.img.setLevels([-50, 40])
+        self.img.setLevels([0, 5])
 
         freq = np.arange((CHUNK/2)+1)/(float(CHUNK)/bitrate)
         yscale = 1.0/(self.img_array.shape[1]/freq[-1])
@@ -38,8 +38,7 @@ class SpectrogramWidget(pg.PlotItem):
 
     def update(self, chunk: int) -> None:
         magnitude = np.fft.rfft(chunk*self.win) / CHUNK
-        magnitude_in_db_scale = 20 * np.log10(abs(magnitude))
-
+        abs_mag = abs(magnitude)
         self.img_array = np.roll(self.img_array, -1, 0)
-        self.img_array[-1:] = magnitude_in_db_scale
+        self.img_array[-1:] = abs_mag
         self.img.setImage(self.img_array, autoLevels=False)
