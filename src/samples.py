@@ -5,6 +5,7 @@ import threading
 import numpy as np
 import wave
 import struct
+import array
 
 BITRATE: int = 11025
 WAV_BITRATE: int = 44100
@@ -30,13 +31,11 @@ class Samples:
         sound_samples = []
         print('position: ' + str(self.position))
         print('frame_count: ' + str(frame_count))
-
         for frame in range(int(self.position), int(self.position) + frame_count):
             value = self.expression.eval(frame) % 256
             self.samples.append(value)
-            val = struct.pack('B', value)
-            sound_samples.append(val)
-        data = b''.join(sound_samples)
+            sound_samples.append(value)
+        data = bytes(sound_samples)
         self.position += frame_count
         try:
             if (self.waveform_signal is not None and self.spectrogram_signal is not None) and len(self.samples) >= SAMPLES_TO_EMIT_LENGTH:
