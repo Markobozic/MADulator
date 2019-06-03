@@ -75,9 +75,9 @@ class Madulator(pg.GraphicsView):
             # Change expression into a Value entered by user
             self.change_to_value()
         elif key == QtCore.Qt.Key.Key_Comma:
-            self.samples.increase_playback_speed()
-        elif key == QtCore.Qt.Key.Key_Period:
             self.samples.slowdown_playback_speed()
+        elif key == QtCore.Qt.Key.Key_Period:
+            self.samples.increase_playback_speed()
         elif key == QtCore.Qt.Key.Key_Equal:
             self.samples.reset_playback_speed()
         else:
