@@ -5,7 +5,6 @@ import threading
 import numpy as np
 import wave
 import struct
-import array
 
 BITRATE: int = 11025
 WAV_BITRATE: int = 44100
@@ -29,10 +28,9 @@ class Samples:
     def pyaudio_callback(self, in_data, frame_count, time_info, status) -> (str, int):
         self.lock.acquire()
         sound_samples = []
-        print('position: ' + str(self.position))
-        print('frame_count: ' + str(frame_count))
-        for frame in range(int(self.position), int(self.position) + frame_count):
-            value = self.expression.eval(frame) % 256
+        for frame in range(frame_count):
+            value = self.expression.eval(int(self.position)) % 256
+            self.position += self.step_value
             self.samples.append(value)
             sound_samples.append(value)
         data = bytes(sound_samples)
