@@ -34,7 +34,6 @@ class Samples:
             self.samples.append(value)
             sound_samples.append(value)
         data = bytes(sound_samples)
-        self.position += frame_count
         try:
             if (self.waveform_signal is not None and self.spectrogram_signal is not None) and len(self.samples) >= SAMPLES_TO_EMIT_LENGTH:
                 self.emit_waveform_signal()
