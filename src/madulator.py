@@ -119,7 +119,7 @@ class Madulator(pg.GraphicsView):
     def save_func(self) -> None:
         # Save and download a function
         dialog = QtGui.QFileDialog()
-        path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
+        path = dialog.getSaveFileName(self, 'Save File', 'save/', 'MAD (*.mad)')
         if path[0] != '':
             with open(path[0], 'wb') as out_file:
                 exp = self.samples.get_expression()
@@ -130,8 +130,7 @@ class Madulator(pg.GraphicsView):
         if self.stream.is_active():
             self.stream.stop_stream()
         dialog = QtGui.QFileDialog()
-        dialog.setDefaultSuffix('.mad')
-        path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
+        path = dialog.getOpenFileName(self, 'Open File', 'save/', "MAD (*.mad)")
         if path[0] != '':
             with open(path[0], 'rb') as in_file:
                 exp = pickle.load(in_file)
