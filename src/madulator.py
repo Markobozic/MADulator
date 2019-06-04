@@ -241,8 +241,6 @@ class Madulator(pg.GraphicsView):
 
     def setup_instructions(self) -> None:
         text = '''
-        <p><small>Developed by Marko, Angelic, and Daniel</small></p>
-        <p>Explore randomly generated sound functions.</p>
         <p><strong>Program keys</strong></p>
         <ul>
         <li>[<span style='color:white'>SPACE</span>] pause or resume playback</li>
@@ -276,6 +274,7 @@ class Madulator(pg.GraphicsView):
         <li>[<span style='color:white'>&lt;</span>] replace expression with shift left</li>
         <li>[<span style='color:white'>></span>] replace expression with shift right</li>
         </ul>
+        <p><small>Developed by Marko, Angelic, and Daniel</small></p>
         '''
         self.layout.addLabel(text, rowspan=2)
 
