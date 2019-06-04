@@ -25,6 +25,12 @@ Developed by Marko, Angelic and Daniel (MAD), this program allows one to explore
 
 To install the required modules, use the following command: `pip3 install -r requirements.txt`
 
+## Running
+
+First install the required modules above, then run:
+
+```python3 app.py```
+
 ## Code Additions
 
 To make changes to the repository please checkout the master branch:
