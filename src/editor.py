@@ -1,7 +1,8 @@
 from expression import *
 from pyqtgraph.Qt import QtCore
 
-class Editor():
+
+class Editor:
 
     path = []                   # Keeps track of path from true root to current root
     root = None                 # Current root
