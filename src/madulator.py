@@ -241,7 +241,6 @@ class Madulator(pg.GraphicsView):
 
     def setup_instructions(self) -> None:
         text = '''
-        <h1>MADulator</h1>
         <p><small>Developed by Marko, Angelic, and Daniel</small></p>
         <p>Explore randomly generated sound functions.</p>
         <p><strong>Program keys</strong></p>
@@ -290,4 +289,4 @@ class Madulator(pg.GraphicsView):
     def setup_index(self) -> None:
         self.index_text = pg.LabelItem(name='Index')
         self.layout.addItem(self.index_text)
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.index_text.setText("Function index: {:d} | Playback speed: 1.00".format(self.function_index))
