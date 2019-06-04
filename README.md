@@ -2,7 +2,7 @@
 
 ![Image of MADultor UI](https://github.com/Markobozic/MADulator/blob/master/img/MadulatorUI.jpg)
 
-Developed by Marko, Angelic and Daniel (MAD), this program allows one to explore functionally generated sounds, also known as "bytebeat". Each function is built from a tree of mathematical and bitwise expression nodes. Audio is generated at 8-bit 11,025 hz using a pyaudio stream.
+Developed by Marko, Angelic and Daniel (MAD), this program allows one to explore functionally generated sounds, also known as "bytebeat". Each function is built from a tree of mathematical and bitwise expression nodes. Audio is generated at 8-bit 11,025 hz with a pyaudio stream.
 
 * Index of 2^32 randomly generated functions to explore
 * waveform and spectrogram visualization
