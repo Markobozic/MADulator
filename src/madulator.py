@@ -141,6 +141,7 @@ class Madulator(pg.GraphicsView):
                 self.editor = Editor(exp)
                 # Pass a copy of the expression to editor and display
                 self.copy_func_to_editor_and_display()
+        self.samples.reset_playback_speed()
         self.stream.start_stream()
 
     def restart_stream(self) -> None:
@@ -158,11 +159,13 @@ class Madulator(pg.GraphicsView):
         if self.function_index > 1:
             self.function_index = self.function_index - 1
         self.update_function_from_index()
+        self.samples.reset_playback_speed()
         self.index_text.setText("Random function index: " + str(self.function_index))
 
     def newer_index(self) -> None:
         self.function_index = self.function_index + 1
         self.update_function_from_index()
+        self.samples.reset_playback_speed()
         self.index_text.setText("Random function index: " + str(self.function_index))
 
     def get_index(self) -> None:
@@ -173,6 +176,7 @@ class Madulator(pg.GraphicsView):
             self.generator = Generator(self.function_index)
             self.expression = self.generator.random_function()
             self.copy_func_to_samples()
+            self.samples.reset_playback_speed()
             self.copy_func_to_editor_and_display()
 
     def change_to_value(self) -> None:
