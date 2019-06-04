@@ -53,6 +53,9 @@ class Madulator(pg.GraphicsView):
         elif key == QtCore.Qt.Key.Key_Space:
             # Pause/Resume audio stream
             self.pause_resume()
+        elif key == QtCore.Qt.Key.Key_R:
+            # Restart playback
+            self.restart_stream()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
             self.save_wav()
