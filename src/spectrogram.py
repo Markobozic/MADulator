@@ -6,6 +6,10 @@ np.seterr(divide='ignore')
 CHUNK = 1024
 SPECTROGRAM_WIDTH = 256
 
+# The following code snippet is mostly a mock-up of borrowed code
+# with a few modifications. The source for the spectrogram code can
+# be found at: http://amyboyle.ninja/Pyqtgraph-live-spectrogram
+
 
 class SpectrogramWidget(pg.PlotItem):
     data_available = QtCore.pyqtSignal(np.ndarray)
