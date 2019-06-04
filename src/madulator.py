@@ -233,33 +233,40 @@ class Madulator(pg.GraphicsView):
     def setup_instructions(self) -> None:
         text = '''
         <h1>MADulator</h1>
+        <p><small>Developed by Marko, Angelic, and Daniel</small></p>
         <p>Explore randomly generated sound functions.</p>
-        <p><strong>Keys:</strong></p>
+        <p><strong>Program keys</strong></p>
         <ul>
-        <li>[W] save audio as .WAV file</li>
-        <li>[S] save function to file</li>
-        <li>[L] load function from file</li>
-        <li>[[] decrease random function index</li>
-        <li>[]] increase random function index</li>
-        <li>[I] goto function index</li>
-        <li>[up] [left] [right] navigate function</li>
-        <li>[V] replace expression with value (integer)</li>
-        <li>[T] replace expression with variable</li>
-        <li>[+] replace expression with addition</li>
-        <li>[-] replace expression with subtraction</li>
-        <li>[*] replace expression with multiplication</li>
-        <li>[/] replace expression with integer division</li>
-        <li>[%] replace expression with modulo</li>
-        <li>[&] replace expression with bitwise AND</li>
-        <li>[|] replace expression with bitwise OR</li>
-        <li>[^] replace expression with bitwise XOR</li>
-        <li>[,] decrease playback speed by 10%</li>
-        <li>[.] increase playback speed by 10%</li>
-        <li>[=] restore playback speed to normal</li>
-        <li>[&lt;] replace expression with shift left</li>
-        <li>[>] replace expression with shift right</li>
-        <li>[SPACE] pause or resume playback</li>
-	    <li>[ESC] exit program</li>
+        <li>[<span style='color:white'>SPACE</span>] pause or resume playback</li>
+		<li>[<span style='color:white'>R</span>] restart playback</li>
+        <li>[<span style='color:white'>[</span>] previous random function</li>
+        <li>[<span style='color:white'>]</span>] next random function</li>
+        <li>[<span style='color:white'>I</span>] goto random function index</li>
+        <li>[<span style='color:white'>,</span>] decrease playback speed 10%</li>
+        <li>[<span style='color:white'>.</span>] increase playback speed 10%</li>
+        <li>[<span style='color:white'>=</span>] restore playback speed to normal</li>
+        <li>[<span style='color:white'>S</span>] save function to file</li>
+        <li>[<span style='color:white'>L</span>] load function from file</li>
+        <li>[<span style='color:white'>W</span>] save audio as .WAV file</li>
+        <li>[<span style='color:white'>ESC</span>] exit program</li>
+		</ul>
+		<p><strong>Function Editor keys</strong></p>
+		<ul>
+		<li>[<span style='color:white'>↑</span>] Editor: navigate to parent expression</li>
+        <li>[<span style='color:white'>←</span>] Editor: navigate to left child expression</li>
+        <li>[<span style='color:white'>→</span>] Editor: navigate to right child expression</li>
+        <li>[<span style='color:white'>V</span>] replace expression with value (integer)</li>
+        <li>[<span style='color:white'>T</span>] replace expression with variable</li>
+        <li>[<span style='color:white'>+</span>] replace expression with addition</li>
+        <li>[<span style='color:white'>-</span>] replace expression with subtraction</li>
+        <li>[<span style='color:white'>*</span>] replace expression with multiplication</li>
+        <li>[<span style='color:white'>/</span>] replace expression with integer division</li>
+        <li>[<span style='color:white'>%</span>] replace expression with modulo</li>
+        <li>[<span style='color:white'>&</span>] replace expression with bitwise AND</li>
+        <li>[<span style='color:white'>|</span>] replace expression with bitwise OR</li>
+        <li>[<span style='color:white'>^</span>] replace expression with bitwise XOR</li>
+        <li>[<span style='color:white'>&lt;</span>] replace expression with shift left</li>
+        <li>[<span style='color:white'>></span>] replace expression with shift right</li>
         </ul>
         '''
         self.layout.addLabel(text, rowspan=2)
