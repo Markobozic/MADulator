@@ -241,26 +241,24 @@ class Madulator(pg.GraphicsView):
 
     def setup_instructions(self) -> None:
         text = '''
+        <h1>MADulator</h1>
         <p><strong>Program keys</strong></p>
         <ul>
         <li>[<span style='color:white'>SPACE</span>] pause or resume playback</li>
-		<li>[<span style='color:white'>R</span>] restart playback</li>
-        <li>[<span style='color:white'>[</span>] previous random function</li>
-        <li>[<span style='color:white'>]</span>] next random function</li>
+        <li>[<span style='color:white'>R</span>] restart playback</li>
+        <li>[<span style='color:white'>[</span>] [<span style='color:white'>]</span>] prev/next random function</li>
         <li>[<span style='color:white'>I</span>] goto random function index</li>
-        <li>[<span style='color:white'>,</span>] decrease playback speed 10%</li>
-        <li>[<span style='color:white'>.</span>] increase playback speed 10%</li>
+        <li>[<span style='color:white'>,</span>] [<span style='color:white'>.</span>] decrease/increase playback speed 10%</li>
         <li>[<span style='color:white'>=</span>] restore playback speed to normal</li>
         <li>[<span style='color:white'>S</span>] save function to file</li>
         <li>[<span style='color:white'>L</span>] load function from file</li>
         <li>[<span style='color:white'>W</span>] save audio as .WAV file</li>
         <li>[<span style='color:white'>ESC</span>] exit program</li>
-		</ul>
-		<p><strong>Function Editor keys</strong></p>
-		<ul>
-		<li>[<span style='color:white'>↑</span>] Editor: navigate to parent expression</li>
-        <li>[<span style='color:white'>←</span>] Editor: navigate to left child expression</li>
-        <li>[<span style='color:white'>→</span>] Editor: navigate to right child expression</li>
+        </ul>
+        <p><strong>Function Editor keys</strong></p>
+        <ul>
+        <li>[<span style='color:white'>↑</span>] Editor: navigate to parent node</li>
+        <li>[<span style='color:white'>←</span>] [<span style='color:white'>→</span>] Editor: navigate to left/right node</li>
         <li>[<span style='color:white'>V</span>] replace expression with value (integer)</li>
         <li>[<span style='color:white'>T</span>] replace expression with variable</li>
         <li>[<span style='color:white'>+</span>] replace expression with addition</li>
@@ -271,8 +269,7 @@ class Madulator(pg.GraphicsView):
         <li>[<span style='color:white'>&</span>] replace expression with bitwise AND</li>
         <li>[<span style='color:white'>|</span>] replace expression with bitwise OR</li>
         <li>[<span style='color:white'>^</span>] replace expression with bitwise XOR</li>
-        <li>[<span style='color:white'>&lt;</span>] replace expression with shift left</li>
-        <li>[<span style='color:white'>></span>] replace expression with shift right</li>
+        <li>[<span style='color:white'>&lt;</span>] [<span style='color:white'>></span>] replace expression with shift left/right</li>
         </ul>
         <p><small>Developed by Marko, Angelic, and Daniel</small></p>
         '''
