@@ -53,6 +53,9 @@ class Madulator(pg.GraphicsView):
         elif key == QtCore.Qt.Key.Key_Space:
             # Pause/Resume audio stream
             self.pause_resume()
+        elif key == QtCore.Qt.Key.Key_R:
+            # Restart playback
+            self.restart_stream()
         elif key == QtCore.Qt.Key.Key_W:
             # Save waveform
             self.save_wav()
@@ -64,16 +67,25 @@ class Madulator(pg.GraphicsView):
             self.load_func()
         elif key == QtCore.Qt.Key.Key_BracketLeft:
             # Index through older randomized functions
-            self.older_index()
+            self.previous_index()
         elif key == QtCore.Qt.Key.Key_BracketRight:
             # Index through newer randomized functions
-            self.newer_index()
+            self.next_index()
         elif key == QtCore.Qt.Key.Key_I:
             # Go to a certain function index
             self.get_index()
         elif key == QtCore.Qt.Key.Key_V:
             # Change expression into a Value entered by user
             self.change_to_value()
+        elif key == QtCore.Qt.Key.Key_Comma:
+            self.samples.decrease_playback_speed()
+            self.update_index_speed_text()
+        elif key == QtCore.Qt.Key.Key_Period:
+            self.samples.increase_playback_speed()
+            self.update_index_speed_text()
+        elif key == QtCore.Qt.Key.Key_Equal:
+            self.samples.reset_playback_speed()
+            self.update_index_speed_text()
         else:
             # Change expression as dictated by user
             is_editor_key = self.editor.new_key(ev.key())
@@ -81,6 +93,9 @@ class Madulator(pg.GraphicsView):
                 self.restart_stream()
             else:
                 self.update_editor_info()
+        
+    def update_index_speed_text(self):
+        self.index_text.setText("Function index: {:d} | Playback speed: {:.2f}".format(self.function_index, self.samples.get_playback_speed()))
 
     # Key press events
     def terminate_program(self) -> None:
@@ -113,7 +128,7 @@ class Madulator(pg.GraphicsView):
     def save_func(self) -> None:
         # Save and download a function
         dialog = QtGui.QFileDialog()
-        path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'MAD (*.mad)')
+        path = dialog.getSaveFileName(self, 'Save File', 'save/', 'MAD (*.mad)')
         if path[0] != '':
             with open(path[0], 'wb') as out_file:
                 exp = self.samples.get_expression()
@@ -124,8 +139,7 @@ class Madulator(pg.GraphicsView):
         if self.stream.is_active():
             self.stream.stop_stream()
         dialog = QtGui.QFileDialog()
-        dialog.setDefaultSuffix('.mad')
-        path = dialog.getOpenFileName(self, 'Open File', os.getenv('HOME'))
+        path = dialog.getOpenFileName(self, 'Open File', 'save/', "MAD (*.mad)")
         if path[0] != '':
             with open(path[0], 'rb') as in_file:
                 exp = pickle.load(in_file)
@@ -135,6 +149,8 @@ class Madulator(pg.GraphicsView):
                 self.editor = Editor(exp)
                 # Pass a copy of the expression to editor and display
                 self.copy_func_to_editor_and_display()
+        self.samples.reset_playback_speed()
+        self.update_index_speed_text()
         self.stream.start_stream()
 
     def restart_stream(self) -> None:
@@ -148,16 +164,18 @@ class Madulator(pg.GraphicsView):
         self.stream.start_stream()
         self.update_editor_info()
 
-    def older_index(self) -> None:
+    def previous_index(self) -> None:
         if self.function_index > 1:
             self.function_index = self.function_index - 1
         self.update_function_from_index()
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.samples.reset_playback_speed()
+        self.update_index_speed_text()
 
-    def newer_index(self) -> None:
+    def next_index(self) -> None:
         self.function_index = self.function_index + 1
         self.update_function_from_index()
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.samples.reset_playback_speed()
+        self.update_index_speed_text()
 
     def get_index(self) -> None:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
@@ -167,7 +185,9 @@ class Madulator(pg.GraphicsView):
             self.generator = Generator(self.function_index)
             self.expression = self.generator.random_function()
             self.copy_func_to_samples()
+            self.samples.reset_playback_speed()
             self.copy_func_to_editor_and_display()
+            self.update_index_speed_text()
 
     def change_to_value(self) -> None:
         # Change expression into a Value entered by user
@@ -205,7 +225,7 @@ class Madulator(pg.GraphicsView):
         return -1
 
     def setup_layout(self) -> None:
-        self.layout = pg.GraphicsLayout(border=(100,100,100))
+        self.layout = pg.GraphicsLayout(border=(100, 100, 100))
         self.setCentralItem(self.layout)
         self.show()
         self.setWindowTitle('MADulator')
@@ -221,31 +241,40 @@ class Madulator(pg.GraphicsView):
 
     def setup_instructions(self) -> None:
         text = '''
-        <h1>MADulator</h1>
+        <p><small>Developed by Marko, Angelic, and Daniel</small></p>
         <p>Explore randomly generated sound functions.</p>
-        <p><strong>Keys:</strong></p>
+        <p><strong>Program keys</strong></p>
         <ul>
-        <li>[W] save audio as .WAV file</li>
-        <li>[S] save function to file</li>
-        <li>[L] load function from file</li>
-        <li>[[] decrease random function index</li>
-        <li>[]] increase random function index</li>
-        <li>[I] goto function index</li>
-        <li>[up] [left] [right] navigate function</li>
-        <li>[V] replace expression with value (integer)</li>
-        <li>[T] replace expression with variable</li>
-        <li>[+] replace expression with addition</li>
-        <li>[-] replace expression with subtraction</li>
-        <li>[*] replace expression with multiplication</li>
-        <li>[/] replace expression with integer division</li>
-        <li>[%] replace expression with modulo</li>
-        <li>[&] replace expression with bitwise AND</li>
-        <li>[|] replace expression with bitwise OR</li>
-        <li>[^] replace expression with bitwise XOR</li>
-        <li>[&lt;] replace expression with shift left</li>
-        <li>[>] replace expression with shift right</li>
-        <li>[SPACE] pause or resume playback</li>
-	    <li>[ESC] exit program</li>
+        <li>[<span style='color:white'>SPACE</span>] pause or resume playback</li>
+		<li>[<span style='color:white'>R</span>] restart playback</li>
+        <li>[<span style='color:white'>[</span>] previous random function</li>
+        <li>[<span style='color:white'>]</span>] next random function</li>
+        <li>[<span style='color:white'>I</span>] goto random function index</li>
+        <li>[<span style='color:white'>,</span>] decrease playback speed 10%</li>
+        <li>[<span style='color:white'>.</span>] increase playback speed 10%</li>
+        <li>[<span style='color:white'>=</span>] restore playback speed to normal</li>
+        <li>[<span style='color:white'>S</span>] save function to file</li>
+        <li>[<span style='color:white'>L</span>] load function from file</li>
+        <li>[<span style='color:white'>W</span>] save audio as .WAV file</li>
+        <li>[<span style='color:white'>ESC</span>] exit program</li>
+		</ul>
+		<p><strong>Function Editor keys</strong></p>
+		<ul>
+		<li>[<span style='color:white'>↑</span>] Editor: navigate to parent expression</li>
+        <li>[<span style='color:white'>←</span>] Editor: navigate to left child expression</li>
+        <li>[<span style='color:white'>→</span>] Editor: navigate to right child expression</li>
+        <li>[<span style='color:white'>V</span>] replace expression with value (integer)</li>
+        <li>[<span style='color:white'>T</span>] replace expression with variable</li>
+        <li>[<span style='color:white'>+</span>] replace expression with addition</li>
+        <li>[<span style='color:white'>-</span>] replace expression with subtraction</li>
+        <li>[<span style='color:white'>*</span>] replace expression with multiplication</li>
+        <li>[<span style='color:white'>/</span>] replace expression with integer division</li>
+        <li>[<span style='color:white'>%</span>] replace expression with modulo</li>
+        <li>[<span style='color:white'>&</span>] replace expression with bitwise AND</li>
+        <li>[<span style='color:white'>|</span>] replace expression with bitwise OR</li>
+        <li>[<span style='color:white'>^</span>] replace expression with bitwise XOR</li>
+        <li>[<span style='color:white'>&lt;</span>] replace expression with shift left</li>
+        <li>[<span style='color:white'>></span>] replace expression with shift right</li>
         </ul>
         '''
         self.layout.addLabel(text, rowspan=2)
@@ -260,4 +289,4 @@ class Madulator(pg.GraphicsView):
     def setup_index(self) -> None:
         self.index_text = pg.LabelItem(name='Index')
         self.layout.addItem(self.index_text)
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.index_text.setText("Function index: {:d} | Playback speed: 1.00".format(self.function_index))

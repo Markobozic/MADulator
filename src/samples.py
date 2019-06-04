@@ -9,27 +9,31 @@ import struct
 BITRATE: int = 11025
 WAV_BITRATE: int = 44100
 SAMPLES_TO_EMIT_LENGTH: int = 1024
+INCREASE_PLAYBACK_MULTIPLIER: float = 10.0/9.0
+DECREASE_PLAYBACK_MULTIPLIER: float = 9.0/10.0
+DEFAULT_PLAYBACK_SPEED: float = 1.0
+
 
 class Samples:
 
     def __init__(self, waveform_signal: QtCore.pyqtSignal = None, spectrogram_signal: QtCore.pyqtSignal = None):
-        self.expression = Expression()
+        self.expression = None
         self.lock = threading.Lock()
         self.waveform_signal = waveform_signal
         self.spectrogram_signal = spectrogram_signal
         self.samples = []
-        self.position = 0
+        self.position = 0.0
+        self.step_value = DEFAULT_PLAYBACK_SPEED
 
     def pyaudio_callback(self, in_data, frame_count, time_info, status) -> (str, int):
         self.lock.acquire()
         sound_samples = []
-        for i in range(self.position, self.position + frame_count):
-            value = self.expression.eval(i) % 256
+        for frame in range(frame_count):
+            value = self.expression.eval(int(self.position)) % 256
+            self.position += self.step_value
             self.samples.append(value)
-            val = struct.pack('B', value)
-            sound_samples.append(val)
-        data = b''.join(sound_samples)
-        self.position += frame_count
+            sound_samples.append(value)
+        data = bytes(sound_samples)
         try:
             if (self.waveform_signal is not None and self.spectrogram_signal is not None) and len(self.samples) >= SAMPLES_TO_EMIT_LENGTH:
                 self.emit_waveform_signal()
@@ -73,3 +77,15 @@ class Samples:
 
     def emit_spectrogram_signal(self):
         self.spectrogram_signal.emit(np.asarray(self.samples[-SAMPLES_TO_EMIT_LENGTH:]))
+
+    def reset_playback_speed(self):
+        self.step_value = DEFAULT_PLAYBACK_SPEED
+
+    def increase_playback_speed(self):
+        self.step_value *= INCREASE_PLAYBACK_MULTIPLIER
+
+    def decrease_playback_speed(self):
+        self.step_value *= DECREASE_PLAYBACK_MULTIPLIER
+
+    def get_playback_speed(self):
+        return self.step_value
