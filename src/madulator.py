@@ -258,7 +258,7 @@ class Madulator(pg.GraphicsView):
         <p><strong>Function Editor keys</strong></p>
         <ul>
         <li>[<span style='color:white'>↑</span>] Editor: navigate to parent node</li>
-        <li>[<span style='color:white'>←</span>] [<span style='color:white'>→</span>] Editor: navigate to left/right node</li>
+        <li>[<span style='color:white'>←</span>] [<span style='color:white'>→</span>] Editor: navigate to left/right child</li>
         <li>[<span style='color:white'>V</span>] replace expression with value (integer)</li>
         <li>[<span style='color:white'>T</span>] replace expression with variable</li>
         <li>[<span style='color:white'>+</span>] replace expression with addition</li>
