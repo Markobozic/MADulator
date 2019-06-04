@@ -86,3 +86,6 @@ class Samples:
 
     def decrease_playback_speed(self):
         self.step_value *= DECREASE_PLAYBACK_MULTIPLIER
+
+    def get_playback_speed(self):
+        return self.step_value

@@ -67,10 +67,10 @@ class Madulator(pg.GraphicsView):
             self.load_func()
         elif key == QtCore.Qt.Key.Key_BracketLeft:
             # Index through older randomized functions
-            self.older_index()
+            self.previous_index()
         elif key == QtCore.Qt.Key.Key_BracketRight:
             # Index through newer randomized functions
-            self.newer_index()
+            self.next_index()
         elif key == QtCore.Qt.Key.Key_I:
             # Go to a certain function index
             self.get_index()
@@ -79,10 +79,13 @@ class Madulator(pg.GraphicsView):
             self.change_to_value()
         elif key == QtCore.Qt.Key.Key_Comma:
             self.samples.decrease_playback_speed()
+            self.update_index_speed_text()
         elif key == QtCore.Qt.Key.Key_Period:
             self.samples.increase_playback_speed()
+            self.update_index_speed_text()
         elif key == QtCore.Qt.Key.Key_Equal:
             self.samples.reset_playback_speed()
+            self.update_index_speed_text()
         else:
             # Change expression as dictated by user
             is_editor_key = self.editor.new_key(ev.key())
@@ -90,6 +93,9 @@ class Madulator(pg.GraphicsView):
                 self.restart_stream()
             else:
                 self.update_editor_info()
+        
+    def update_index_speed_text(self):
+        self.index_text.setText("Function index: {:d} | Playback speed: {:.2f}".format(self.function_index, self.samples.get_playback_speed()))
 
     # Key press events
     def terminate_program(self) -> None:
@@ -144,6 +150,7 @@ class Madulator(pg.GraphicsView):
                 # Pass a copy of the expression to editor and display
                 self.copy_func_to_editor_and_display()
         self.samples.reset_playback_speed()
+        self.update_index_speed_text()
         self.stream.start_stream()
 
     def restart_stream(self) -> None:
@@ -157,18 +164,18 @@ class Madulator(pg.GraphicsView):
         self.stream.start_stream()
         self.update_editor_info()
 
-    def older_index(self) -> None:
+    def previous_index(self) -> None:
         if self.function_index > 1:
             self.function_index = self.function_index - 1
         self.update_function_from_index()
         self.samples.reset_playback_speed()
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.update_index_speed_text()
 
-    def newer_index(self) -> None:
+    def next_index(self) -> None:
         self.function_index = self.function_index + 1
         self.update_function_from_index()
         self.samples.reset_playback_speed()
-        self.index_text.setText("Random function index: " + str(self.function_index))
+        self.update_index_speed_text()
 
     def get_index(self) -> None:
         val, ok = QtGui.QInputDialog.getInt(self, "Input Index:", "Index:", 1, 1, 2**30, 1)
@@ -180,6 +187,7 @@ class Madulator(pg.GraphicsView):
             self.copy_func_to_samples()
             self.samples.reset_playback_speed()
             self.copy_func_to_editor_and_display()
+            self.update_index_speed_text()
 
     def change_to_value(self) -> None:
         # Change expression into a Value entered by user
