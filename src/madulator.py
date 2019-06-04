@@ -244,23 +244,23 @@ class Madulator(pg.GraphicsView):
         <h1>MADulator</h1>
         <p><strong>Program keys</strong></p>
         <ul>
-        <li>[<span style='color:white'>SPACE</span>] pause or resume playback</li>
-        <li>[<span style='color:white'>R</span>] restart playback</li>
+        <li>[<span style='color:white'>space</span>] pause or resume playback</li>
+        <li>[<span style='color:white'>r</span>] restart playback</li>
         <li>[<span style='color:white'>[</span>] [<span style='color:white'>]</span>] prev/next random function</li>
-        <li>[<span style='color:white'>I</span>] goto random function index</li>
+        <li>[<span style='color:white'>i</span>] goto random function index</li>
         <li>[<span style='color:white'>,</span>] [<span style='color:white'>.</span>] decrease/increase playback speed 10%</li>
         <li>[<span style='color:white'>=</span>] restore playback speed to normal</li>
-        <li>[<span style='color:white'>S</span>] save function to file</li>
-        <li>[<span style='color:white'>L</span>] load function from file</li>
-        <li>[<span style='color:white'>W</span>] save audio as .WAV file</li>
+        <li>[<span style='color:white'>s</span>] save function to file</li>
+        <li>[<span style='color:white'>l</span>] load function from file</li>
+        <li>[<span style='color:white'>w</span>] save audio as .WAV file</li>
         <li>[<span style='color:white'>ESC</span>] exit program</li>
         </ul>
         <p><strong>Function Editor keys</strong></p>
         <ul>
         <li>[<span style='color:white'>↑</span>] Editor: navigate to parent node</li>
         <li>[<span style='color:white'>←</span>] [<span style='color:white'>→</span>] Editor: navigate to left/right child</li>
-        <li>[<span style='color:white'>V</span>] replace expression with value (integer)</li>
-        <li>[<span style='color:white'>T</span>] replace expression with variable</li>
+        <li>[<span style='color:white'>v</span>] replace expression with value (integer)</li>
+        <li>[<span style='color:white'>t</span>] replace expression with variable</li>
         <li>[<span style='color:white'>+</span>] replace expression with addition</li>
         <li>[<span style='color:white'>-</span>] replace expression with subtraction</li>
         <li>[<span style='color:white'>*</span>] replace expression with multiplication</li>
