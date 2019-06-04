@@ -109,7 +109,7 @@ class Madulator(pg.GraphicsView):
     def save_wav(self) -> None:
         # Save waveform
         duration, ok = QtGui.QInputDialog.getInt(self, "Seconds of Audio:", "Seconds:",
-            1, 0, max_val, step_val)
+            1, 0, MAX_VAL, STEP_VAL)
         if ok:
             dialog = QtGui.QFileDialog()
             path = dialog.getSaveFileName(self, 'Save File', os.getenv('HOME'), 'WAV (*.wav)')
@@ -186,6 +186,7 @@ class Madulator(pg.GraphicsView):
         val = self.get_number()
         if val != -1:
             self.editor.create_value(val)
+            self.restart_stream()
         self.update_editor_info()
 
     def update_function_from_index(self) -> None:
